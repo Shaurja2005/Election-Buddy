@@ -35,10 +35,10 @@ export default function ChatInterface({ address, messages, onAddMessage }: ChatI
 
   // Auto-inject welcome message if empty
   useEffect(() => {
-    if (messages.length === 0) {
+    if (messages.length === 0 || !messages.some(m => m.id === "welcome")) {
       onAddMessage(WELCOME_MESSAGE);
     }
-  }, [messages.length, onAddMessage]);
+  }, [messages.length, onAddMessage, messages]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });

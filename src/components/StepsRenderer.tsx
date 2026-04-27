@@ -65,13 +65,12 @@ export default function StepsRenderer({ text }: StepsRendererProps) {
         {steps.map((step, idx) => (
           <li
             key={idx}
-            className={`step ${
-              step.status === "active"
+            className={`step ${step.status === "active"
                 ? "step-primary"
                 : step.status === "completed"
-                ? "step-success"
-                : ""
-            }`}
+                  ? "step-success"
+                  : ""
+              }`}
           >
             <div className="text-left pl-3">
               <div className="font-semibold text-base prose prose-sm prose-invert max-w-none">

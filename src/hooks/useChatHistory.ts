@@ -17,14 +17,23 @@ export function useChatHistory() {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
-        // Hydrate dates properly
-        const parsed = JSON.parse(stored).map((s: any) => ({
-          ...s,
-          messages: s.messages.map((m: any) => ({
-            ...m,
-            timestamp: new Date(m.timestamp),
-          })),
-        }));
+        // Hydrate dates properly and deduplicate messages by ID
+        const parsed = JSON.parse(stored).map((s: any) => {
+          const uniqueIds = new Set();
+          return {
+            ...s,
+            messages: s.messages
+              .filter((m: any) => {
+                if (uniqueIds.has(m.id)) return false;
+                uniqueIds.add(m.id);
+                return true;
+              })
+              .map((m: any) => ({
+                ...m,
+                timestamp: new Date(m.timestamp),
+              })),
+          };
+        });
         setSessions(parsed);
         if (parsed.length > 0) {
           setActiveSessionId(parsed[0].id); // default to most recent
@@ -80,9 +89,11 @@ export function useChatHistory() {
     setSessions((prev) =>
       prev.map((s) => {
         if (s.id === sessionId) {
+          // Prevent duplicates
+          if (s.messages.some((m) => m.id === message.id)) return s;
           const updatedMessages = [...s.messages, message];
           const updated = { ...s, messages: updatedMessages, updatedAt: Date.now() };
-          
+
           if (s.title === "New Chat" && message.role === "user") {
             updated.title = message.content.slice(0, 30) + (message.content.length > 30 ? "..." : "");
           }
@@ -113,7 +124,7 @@ export function useChatHistory() {
             }
           }
           if (updates.address) {
-             setLastUsedAddress(updates.address);
+            setLastUsedAddress(updates.address);
           }
           return updated;
         }

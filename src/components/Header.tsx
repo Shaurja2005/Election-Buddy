@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { ThemeToggle } from "./ThemeToggle";
 
 export default function Header() {
   return (
@@ -26,7 +25,7 @@ export default function Header() {
           <div className="dropdown dropdown-end">
             <div tabIndex={0} role="button" className="text-xs btn btn-sm btn-ghost text-primary gap-1 font-medium px-2">
               🌐 Official Portals
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 opacity-60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><path d="M6 9l6 6 6-6"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 opacity-60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><path d="M6 9l6 6 6-6" /></svg>
             </div>
             <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 border border-base-200 rounded-2xl w-52 text-sm mt-1">
               <li><a href="https://eci.gov.in" target="_blank" rel="noopener noreferrer">🇮🇳 India — eci.gov.in</a></li>
@@ -37,7 +36,6 @@ export default function Header() {
               <li><a href="https://www.elections.org.za" target="_blank" rel="noopener noreferrer">🇿🇦 South Africa — IEC</a></li>
             </ul>
           </div>
-          <ThemeToggle />
         </div>
       </div>
     </header>

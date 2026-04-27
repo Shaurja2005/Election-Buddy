@@ -36,24 +36,6 @@ module.exports = {
   daisyui: {
     themes: [
       {
-        light: {
-          // warm golden-yellow primary to match the OKLCH value
-          "primary": "#e8d44d",
-          "primary-content": "#1c1c1c",
-          "secondary": "#f5f5f5",
-          "secondary-content": "#1c1c1c",
-          "accent": "#f2f0d0",
-          "accent-content": "#1c1c1c",
-          "neutral": "#4a4a4a",
-          "base-100": "#ffffff",
-          "base-200": "#f8f8f8",
-          "base-300": "#e6e6e6",
-          "base-content": "#2c2c2c",
-          "info": "#3b82f6",
-          "success": "#22c55e",
-          "warning": "#f59e0b",
-          "error": "#c94a2e",
-        },
         dark: {
           "primary": "#e8d44d",
           "primary-content": "#1c1c1c",

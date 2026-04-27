@@ -104,45 +104,45 @@ export default function ChatApp() {
             </section>
           ) : (
             <div className="flex items-center justify-center shrink-0 py-2">
-               <div className="flex items-center gap-2 text-sm text-base-content dark:text-white/90 font-medium">
-                  <span>Using data for: <strong className="font-bold text-primary">{activeSession.address.length > 35 ? activeSession.address.slice(0, 35) + "..." : activeSession.address}</strong></span>
-                  <button 
-                    onClick={() => updateSession(activeSession.id, { address: "" })}
-                    className="ml-2 text-[11px] opacity-60 hover:opacity-100 hover:text-primary transition-colors uppercase tracking-wider font-bold"
-                  >
-                    Change
-                  </button>
-               </div>
+              <div className="flex items-center gap-2 text-sm text-base-content dark:text-white/90 font-medium">
+                <span>Using data for: <strong className="font-bold text-primary">{activeSession.address.length > 35 ? activeSession.address.slice(0, 35) + "..." : activeSession.address}</strong></span>
+                <button
+                  onClick={() => updateSession(activeSession.id, { address: "" })}
+                  className="ml-2 text-[11px] opacity-60 hover:opacity-100 hover:text-primary transition-colors uppercase tracking-wider font-bold"
+                >
+                  Change
+                </button>
+              </div>
             </div>
           )}
 
           {/* Chat Interface */}
           <section className="card-themed overflow-hidden flex flex-col flex-1 min-h-0 relative shadow-sm">
-             {/* Header */}
-             <div className="flex items-center px-4 py-3 bg-primary text-primary-content">
-                <div className="flex items-center gap-3">
-                  <img
-                    src="/logo.png"
-                    alt="Ballot Buddy Avatar"
-                    className="w-10 h-10 rounded-full object-cover shadow-inner border-2 border-black"
-                  />
-                  <div className="flex flex-col">
-                    <span className="text-base font-bold leading-tight">Ballot Buddy</span>
-                    <div className="flex items-center gap-1.5 mt-0.5">
-                      <div className="w-2.5 h-2.5 rounded-full bg-green-400 border border-green-200 shadow-sm" />
-                      <span className="text-xs font-medium opacity-90">Online Now</span>
-                    </div>
+            {/* Header */}
+            <div className="flex items-center px-4 py-3 bg-primary text-primary-content">
+              <div className="flex items-center gap-3">
+                <img
+                  src="/logo.png"
+                  alt="Ballot Buddy Avatar"
+                  className="w-10 h-10 rounded-full object-cover shadow-inner border-2 border-black"
+                />
+                <div className="flex flex-col">
+                  <span className="text-base font-bold leading-tight">Ballot Buddy</span>
+                  <div className="flex items-center gap-1.5 mt-0.5">
+                    <div className="w-2.5 h-2.5 rounded-full bg-green-400 border border-green-200 shadow-sm" />
+                    <span className="text-xs font-medium opacity-90">Online Now</span>
                   </div>
                 </div>
-             </div>
-             
-             <div className="flex flex-col flex-1 min-h-0 bg-base-50/50">
-               <ChatInterface
-                 address={activeSession.address}
-                 messages={activeSession.messages}
-                 onAddMessage={handleAddMessage}
-               />
-             </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col flex-1 min-h-0 bg-base-50/50">
+              <ChatInterface
+                address={activeSession.address}
+                messages={activeSession.messages}
+                onAddMessage={handleAddMessage}
+              />
+            </div>
           </section>
         </div>
       </main>

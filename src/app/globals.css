@@ -6,25 +6,25 @@
 
 /* ── OKLCH Theme Variables ── */
 :root {
-  --background: oklch(0.985 0 0);
-  --foreground: oklch(0.2 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.2 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.2 0 0);
-  --primary: oklch(0.51 0.2 270);
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.96 0 0);
-  --secondary-foreground: oklch(0.2 0 0);
-  --muted: oklch(0.96 0 0);
-  --muted-foreground: oklch(0.45 0 0);
-  --accent: oklch(0.96 0.05 270);
-  --accent-foreground: oklch(0.51 0.2 270);
-  --destructive: oklch(0.55 0.2 25);
-  --destructive-foreground: oklch(1 0 0);
-  --border: oklch(0.92 0 0);
-  --input: oklch(0.92 0 0);
-  --ring: oklch(0.51 0.2 270);
+  --background: oklch(100% 0 0);
+  --foreground: oklch(12% 0.042 264.695);
+  --card: oklch(100% 0 0);
+  --card-foreground: oklch(12% 0.042 264.695);
+  --popover: oklch(100% 0 0);
+  --popover-foreground: oklch(12% 0.042 264.695);
+  --primary: oklch(79% 0.209 151.711);
+  --primary-foreground: oklch(12% 0.042 264.695);
+  --secondary: oklch(98% 0 0);
+  --secondary-foreground: oklch(12% 0.042 264.695);
+  --muted: oklch(98% 0 0);
+  --muted-foreground: oklch(42% 0.03 264.695);
+  --accent: oklch(79% 0.209 151.711);
+  --accent-foreground: oklch(12% 0.042 264.695);
+  --destructive: oklch(83% 0.128 66.29);
+  --destructive-foreground: oklch(12% 0.042 264.695);
+  --border: oklch(95% 0 0);
+  --input: oklch(95% 0 0);
+  --ring: oklch(79% 0.209 151.711);
   --radius: 1.4rem;
 }
 
@@ -67,8 +67,15 @@ body {
   scrollbar-width: thin;
   scrollbar-color: var(--border) transparent;
 }
-.overflow-y-auto::-webkit-scrollbar { width: 4px; }
-.overflow-y-auto::-webkit-scrollbar-track { background: transparent; }
+
+.overflow-y-auto::-webkit-scrollbar {
+  width: 4px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: transparent;
+}
+
 .overflow-y-auto::-webkit-scrollbar-thumb {
   background: var(--border);
   border-radius: 9999px;
@@ -89,9 +96,11 @@ body {
   padding: 0;
   flex-shrink: 0;
 }
+
 .theme-toggle.dark-active {
   background-color: var(--primary);
 }
+
 .theme-toggle__thumb {
   position: absolute;
   left: 3px;
@@ -99,7 +108,7 @@ body {
   height: 22px;
   border-radius: 9999px;
   background-color: white;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
   transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   align-items: center;
@@ -107,19 +116,32 @@ body {
   font-size: 12px;
   line-height: 1;
 }
+
 .theme-toggle.dark-active .theme-toggle__thumb {
   transform: translateX(24px);
 }
 
 /* ── Chat layout ── */
-.chat-bubble { max-width: 100%; }
+.chat-bubble {
+  max-width: 100%;
+}
 
 /* ── Message bubble animations ── */
 @keyframes bubble-in {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
-.chat-bubble-animate { animation: bubble-in 0.25s ease forwards; }
+
+.chat-bubble-animate {
+  animation: bubble-in 0.25s ease forwards;
+}
 
 /* ── Card border ── */
 .card-themed {
