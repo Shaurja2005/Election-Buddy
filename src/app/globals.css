@@ -1,0 +1,131 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+
+/* ── OKLCH Theme Variables ── */
+:root {
+  --background: oklch(0.985 0 0);
+  --foreground: oklch(0.2 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.2 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.2 0 0);
+  --primary: oklch(0.51 0.2 270);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.96 0 0);
+  --secondary-foreground: oklch(0.2 0 0);
+  --muted: oklch(0.96 0 0);
+  --muted-foreground: oklch(0.45 0 0);
+  --accent: oklch(0.96 0.05 270);
+  --accent-foreground: oklch(0.51 0.2 270);
+  --destructive: oklch(0.55 0.2 25);
+  --destructive-foreground: oklch(1 0 0);
+  --border: oklch(0.92 0 0);
+  --input: oklch(0.92 0 0);
+  --ring: oklch(0.51 0.2 270);
+  --radius: 1.4rem;
+}
+
+.dark {
+  --background: oklch(0.1398 0 0);
+  --foreground: oklch(0.9850 0.0041 91.4457);
+  --card: oklch(0.1822 0 0);
+  --card-foreground: oklch(0.9850 0.0041 91.4457);
+  --popover: oklch(0.1822 0 0);
+  --popover-foreground: oklch(0.9850 0.0041 91.4457);
+  --primary: oklch(0.8893 0.1777 95.2779);
+  --primary-foreground: oklch(0.1398 0 0);
+  --secondary: oklch(0.2221 0 0);
+  --secondary-foreground: oklch(0.9851 0 0);
+  --muted: oklch(0.2221 0 0);
+  --muted-foreground: oklch(0.6830 0 0);
+  --accent: oklch(0.2221 0 0);
+  --accent-foreground: oklch(0.9851 0 0);
+  --destructive: oklch(0.5433 0.1740 29.6967);
+  --destructive-foreground: oklch(1.0000 0 0);
+  --border: oklch(0.2520 0 0);
+  --input: oklch(0.2520 0 0);
+  --ring: oklch(0.8893 0.1777 95.2779);
+}
+
+/* ── Base ── */
+html {
+  font-family: "Inter", system-ui, sans-serif;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ── Theme-aware scrollbar ── */
+.overflow-y-auto {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+.overflow-y-auto::-webkit-scrollbar { width: 4px; }
+.overflow-y-auto::-webkit-scrollbar-track { background: transparent; }
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 9999px;
+}
+
+/* ── Animated dark-mode toggle ── */
+.theme-toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: 52px;
+  height: 28px;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: background-color 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  background-color: var(--border);
+  border: none;
+  padding: 0;
+  flex-shrink: 0;
+}
+.theme-toggle.dark-active {
+  background-color: var(--primary);
+}
+.theme-toggle__thumb {
+  position: absolute;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 9999px;
+  background-color: white;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  line-height: 1;
+}
+.theme-toggle.dark-active .theme-toggle__thumb {
+  transform: translateX(24px);
+}
+
+/* ── Chat layout ── */
+.chat-bubble { max-width: 100%; }
+
+/* ── Message bubble animations ── */
+@keyframes bubble-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.chat-bubble-animate { animation: bubble-in 0.25s ease forwards; }
+
+/* ── Card border ── */
+.card-themed {
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--card-foreground);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}

@@ -1,0 +1,34 @@
+{
+  "name": "election-assistant",
+  "version": "1.0.0",
+  "description": "Google Prompt Wars - Election Assistant",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.21.0",
+    "autoprefixer": "^10.4.20",
+    "next": "^15.3.1",
+    "next-themes": "^0.4.6",
+    "postcss": "^8.5.3",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-markdown": "^10.1.0",
+    "tailwindcss-animate": "^1.0.7"
+  },
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.19",
+    "@types/node": "^22.15.3",
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
+    "daisyui": "^4.12.24",
+    "eslint": "^9.26.0",
+    "eslint-config-next": "^15.3.1",
+    "tailwindcss": "^3.4.19",
+    "typescript": "^5.8.3"
+  }
+}
