@@ -23,6 +23,13 @@ export default function ChatApp() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [draftAddress, setDraftAddress] = useState("");
 
+  useEffect(() => {
+    // on desktop, we want it open initially
+    if (typeof window !== "undefined" && window.innerWidth >= 768) {
+      setIsSidebarOpen(true);
+    }
+  }, []);
+
   // Sync draft address when switching sessions
   useEffect(() => {
     if (activeSession) {
@@ -58,7 +65,7 @@ export default function ChatApp() {
   }
 
   return (
-    <div className="flex-1 flex h-[calc(100vh-3.5rem)] overflow-hidden">
+    <div className="flex-1 flex h-[calc(100vh-3.5rem)] overflow-hidden relative">
       <Sidebar
         sessions={sessions}
         activeSessionId={activeSessionId}
@@ -70,16 +77,16 @@ export default function ChatApp() {
       />
 
       <main className="flex-1 flex flex-col h-full overflow-hidden bg-background relative">
-        {/* Mobile Sidebar Toggle & Header */}
-        <div className="md:hidden flex items-center px-4 py-3 border-b border-base-200 bg-base-100/80 backdrop-blur z-10">
+        <div className="flex items-center px-4 py-3 bg-base-100 z-10 w-full mb-1">
           <button
-            onClick={() => setIsSidebarOpen(true)}
-            className="btn btn-ghost btn-sm btn-square -ml-2 mr-2"
-            aria-label="Open sidebar"
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            className="btn btn-ghost btn-sm btn-square -ml-2 mr-2 hover:bg-base-200 transition-all"
+            aria-label="Toggle sidebar"
+            title="Toggle sidebar"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
+              className="h-5 w-5 opacity-70"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -87,9 +94,6 @@ export default function ChatApp() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
-          <div className="flex-1 truncate font-medium text-sm">
-            {activeSession.title}
-          </div>
         </div>
 
         <div className="flex-1 max-w-4xl w-full mx-auto flex flex-col p-4 gap-4 overflow-hidden">

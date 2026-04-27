@@ -31,20 +31,27 @@ export default function Sidebar({
         />
       )}
 
-      {/* Sidebar container */}
+      {/* Sidebar spacer for desktop pushing */}
       <div
-        className={`fixed inset-y-0 left-0 z-50 w-72 bg-base-100 border-r border-base-200 transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0 flex flex-col ${
+        className={`hidden md:block flex-shrink-0 transition-all duration-300 ease-in-out ${
+          isOpen ? "w-72" : "w-0"
+        }`}
+      />
+
+      {/* Actual sliding sidebar container */}
+      <div
+        className={`fixed md:absolute inset-y-0 left-0 z-40 bg-base-100 border-r border-base-200 transition-transform duration-300 ease-in-out shadow-xl md:shadow-none h-full w-72 flex flex-col ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="p-4 flex items-center gap-2 border-b border-base-200">
-          <button
-            onClick={() => {
-              onNewChat();
-              if (window.innerWidth < 768) onClose();
-            }}
-            className="flex-1 btn btn-primary justify-start gap-2 rounded-xl"
-          >
+            <button
+              onClick={() => {
+                onNewChat();
+                if (window.innerWidth < 768) onClose();
+              }}
+              className="flex-1 btn btn-primary justify-start gap-2 rounded-xl"
+            >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-4 w-4"
@@ -78,19 +85,23 @@ export default function Sidebar({
               No previous chats
             </div>
           ) : (
-            sessions.map((session) => (
-              <div
-                key={session.id}
-                className={`group flex items-center justify-between p-3 rounded-xl cursor-pointer transition-colors ${
-                  activeSessionId === session.id
-                    ? "bg-primary/10 text-primary font-medium"
-                    : "hover:bg-base-200 text-base-content/80"
-                }`}
-                onClick={() => {
-                  onSelect(session.id);
-                  if (window.innerWidth < 768) onClose();
-                }}
-              >
+            sessions.map((session) => {
+              const hasUserMessage = session.messages.some((m) => m.role === "user");
+              const canDelete = hasUserMessage;
+
+              return (
+                <div
+                  key={session.id}
+                  className={`group flex items-center justify-between p-3 rounded-xl cursor-pointer transition-colors ${
+                    activeSessionId === session.id
+                      ? "bg-primary/10 text-primary font-medium"
+                      : "hover:bg-base-200 text-base-content/80"
+                  }`}
+                  onClick={() => {
+                    onSelect(session.id);
+                    if (window.innerWidth < 768) onClose();
+                  }}
+                >
                 <div className="flex items-center gap-3 overflow-hidden">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -111,10 +122,16 @@ export default function Sidebar({
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
+                    if (!canDelete) return;
                     onDelete(session.id);
                   }}
-                  className="opacity-0 group-hover:opacity-100 hover:text-error transition-opacity p-1"
-                  aria-label="Delete chat"
+                  disabled={!canDelete}
+                  className={`p-1 transition-opacity ${
+                    canDelete
+                      ? "opacity-0 group-hover:opacity-100 hover:text-error"
+                      : "opacity-30 cursor-not-allowed"
+                  }`}
+                  aria-label={canDelete ? "Delete chat" : "Delete disabled for new chat"}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -131,7 +148,8 @@ export default function Sidebar({
                   </svg>
                 </button>
               </div>
-            ))
+              );
+            })
           )}
         </div>
       </div>
