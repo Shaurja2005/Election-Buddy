@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import Header from "@/components/Header";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
 
 export const metadata: Metadata = {
   title: "Ballot Buddy — Your Election Assistant",
@@ -12,6 +15,9 @@ export const metadata: Metadata = {
     "how to vote",
     "election guide",
     "civic information",
+    "ballot buddy",
+    "Google Civic API",
+    "Gemini AI",
   ],
   authors: [{ name: "Ballot Buddy" }],
   openGraph: {
@@ -22,9 +28,6 @@ export const metadata: Metadata = {
   },
 };
 
-import { ThemeProvider } from "@/components/ThemeProvider";
-import Header from "@/components/Header";
-
 export default function RootLayout({
   children,
 }: {
@@ -32,11 +35,32 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="min-h-screen bg-base-100 antialiased" suppressHydrationWarning>
-        <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark" enableSystem={false}>
+      <body
+        className="min-h-screen bg-base-100 antialiased"
+        suppressHydrationWarning
+      >
+        {/* Google Analytics 4 */}
+        <GoogleAnalytics />
+
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          forcedTheme="dark"
+          enableSystem={false}
+        >
+          {/* Skip Navigation Link for Accessibility */}
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[9999] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-content focus:rounded-lg focus:font-semibold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+          >
+            Skip to main content
+          </a>
+
           <div className="min-h-screen flex flex-col bg-background transition-colors duration-300">
             <Header />
-            {children}
+            <div id="main-content" role="main" tabIndex={-1}>
+              {children}
+            </div>
           </div>
         </ThemeProvider>
       </body>

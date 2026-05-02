@@ -117,23 +117,31 @@ export default function ChatInterface({ address, messages, onAddMessage }: ChatI
   return (
     <div className="flex flex-col h-full">
 
-      {/* ── Message list ── */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4" style={{ minHeight: 0 }}>
+      {/* ── Message list (aria-live for screen readers) ── */}
+      <div
+        role="log"
+        aria-live="polite"
+        aria-label="Chat messages"
+        aria-relevant="additions"
+        className="flex-1 overflow-y-auto px-4 py-4 space-y-4"
+        style={{ minHeight: 0 }}
+      >
         {messages.map((msg) => (
           <ChatBubble key={msg.id} message={msg} />
         ))}
         {isLoading && <TypingBubble />}
-        <div ref={bottomRef} />
+        <div ref={bottomRef} aria-hidden="true" />
       </div>
 
       {/* ── Quick Questions ── */}
-      <div className="px-4 py-2 border-t border-base-200">
-        <div className="flex gap-2 flex-wrap">
+      <nav aria-label="Quick election questions" className="px-4 py-2 border-t border-base-200">
+        <div className="flex gap-2 flex-wrap" role="group" aria-label="Common questions">
           {QUICK_QUESTIONS.map((q) => (
             <button
               key={q}
               onClick={() => sendMessage(q)}
               disabled={isLoading}
+              aria-label={`Ask: ${q}`}
               className="text-xs px-3 py-1.5 rounded-full border border-primary/40 text-primary hover:bg-primary hover:text-primary-content transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
               id={`quick-${q.replace(/\s+/g, "-").toLowerCase().slice(0, 20)}`}
             >
@@ -141,13 +149,16 @@ export default function ChatInterface({ address, messages, onAddMessage }: ChatI
             </button>
           ))}
         </div>
-      </div>
+      </nav>
 
       {/* ── Input area ── */}
-      <div className="px-4 py-3 border-t border-base-200 bg-base-100">
+      <div className="px-4 py-3 border-t border-base-200 bg-base-100" role="form" aria-label="Chat input">
         <div
           className="flex items-end gap-2 rounded-2xl border border-base-300 bg-base-200 px-4 py-2 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-all"
         >
+          <label htmlFor="chat-input" className="sr-only">
+            Type your election question
+          </label>
           <textarea
             ref={inputRef}
             id="chat-input"
@@ -158,8 +169,12 @@ export default function ChatInterface({ address, messages, onAddMessage }: ChatI
             onChange={handleInput}
             onKeyDown={handleKeyDown}
             disabled={isLoading}
+            aria-describedby="chat-input-hint"
             style={{ height: "36px" }}
           />
+          <span id="chat-input-hint" className="sr-only">
+            Press Enter to send, Shift+Enter for a new line
+          </span>
           <button
             id="chat-send-btn"
             onClick={() => sendMessage(input)}

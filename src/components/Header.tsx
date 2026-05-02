@@ -7,7 +7,11 @@ export default function Header() {
     <header className="sticky top-0 z-50 bg-base-100/80 backdrop-blur-md border-b border-base-200 transition-colors duration-300">
       <div className="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
         {/* Brand */}
-        <Link href="/" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
+        <Link
+          href="/"
+          className="flex items-center gap-2.5 hover:opacity-80 transition-opacity"
+          aria-label="Ballot Buddy Home"
+        >
           <img
             src="/logo.png"
             alt="Ballot Buddy Logo"
@@ -20,23 +24,43 @@ export default function Header() {
         </Link>
 
         {/* Right actions */}
-        <div className="flex items-center gap-3">
-
+        <nav aria-label="Official election portals" className="flex items-center gap-3">
           <div className="dropdown dropdown-end">
-            <div tabIndex={0} role="button" className="text-xs btn btn-sm btn-ghost text-primary gap-1 font-medium px-2">
+            <div
+              tabIndex={0}
+              role="button"
+              aria-haspopup="true"
+              aria-label="View official election portals"
+              className="text-xs btn btn-sm btn-ghost text-primary gap-1 font-medium px-2"
+            >
               🌐 Official Portals
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 opacity-60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><path d="M6 9l6 6 6-6" /></svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-3 w-3 opacity-60"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                aria-hidden="true"
+              >
+                <path d="M6 9l6 6 6-6" />
+              </svg>
             </div>
-            <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 border border-base-200 rounded-2xl w-52 text-sm mt-1">
-              <li><a href="https://eci.gov.in" target="_blank" rel="noopener noreferrer">🇮🇳 India — eci.gov.in</a></li>
-              <li><a href="https://vote.gov" target="_blank" rel="noopener noreferrer">🇺🇸 USA — vote.gov</a></li>
-              <li><a href="https://www.gov.uk/vote-uk-election" target="_blank" rel="noopener noreferrer">🇬🇧 UK — gov.uk</a></li>
-              <li><a href="https://www.elections.ca" target="_blank" rel="noopener noreferrer">🇨🇦 Canada — elections.ca</a></li>
-              <li><a href="https://www.aec.gov.au" target="_blank" rel="noopener noreferrer">🇦🇺 Australia — aec.gov.au</a></li>
-              <li><a href="https://www.elections.org.za" target="_blank" rel="noopener noreferrer">🇿🇦 South Africa — IEC</a></li>
+            <ul
+              tabIndex={0}
+              role="menu"
+              aria-label="Country election portals"
+              className="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 border border-base-200 rounded-2xl w-52 text-sm mt-1"
+            >
+              <li role="none"><a role="menuitem" href="https://eci.gov.in" target="_blank" rel="noopener noreferrer">🇮🇳 India — eci.gov.in</a></li>
+              <li role="none"><a role="menuitem" href="https://vote.gov" target="_blank" rel="noopener noreferrer">🇺🇸 USA — vote.gov</a></li>
+              <li role="none"><a role="menuitem" href="https://www.gov.uk/vote-uk-election" target="_blank" rel="noopener noreferrer">🇬🇧 UK — gov.uk</a></li>
+              <li role="none"><a role="menuitem" href="https://www.elections.ca" target="_blank" rel="noopener noreferrer">🇨🇦 Canada — elections.ca</a></li>
+              <li role="none"><a role="menuitem" href="https://www.aec.gov.au" target="_blank" rel="noopener noreferrer">🇦🇺 Australia — aec.gov.au</a></li>
+              <li role="none"><a role="menuitem" href="https://www.elections.org.za" target="_blank" rel="noopener noreferrer">🇿🇦 South Africa — IEC</a></li>
             </ul>
           </div>
-        </div>
+        </nav>
       </div>
     </header>
   );

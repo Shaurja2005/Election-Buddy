@@ -17,7 +17,8 @@ export function TypingBubble() {
       {/* Avatar */}
       <img
         src="/logo.png"
-        alt="Bot Avatar"
+        alt=""
+        aria-hidden="true"
         className="w-8 h-8 rounded-full object-cover flex-shrink-0 border border-transparent dark:border-white/80"
       />
       <div className="px-4 py-2.5 rounded-2xl rounded-bl-sm bg-gray-700 text-gray-100 border border-gray-600 shadow-sm">
@@ -88,7 +89,11 @@ export default function ChatBubble({ message }: ChatBubbleProps) {
 
   if (isUser) {
     return (
-      <div className="flex items-end justify-end gap-2.5 chat-bubble-animate">
+      <div
+        role="article"
+        aria-label="Your message"
+        className="flex items-end justify-end gap-2.5 chat-bubble-animate"
+      >
         <div className="flex flex-col items-end gap-1 max-w-[80%]">
           <div className="px-4 py-2.5 rounded-2xl rounded-br-sm bg-primary text-primary-content text-sm leading-relaxed">
             {message.content}
@@ -98,7 +103,7 @@ export default function ChatBubble({ message }: ChatBubbleProps) {
           </span>
         </div>
         {/* User avatar */}
-        <div className="w-8 h-8 rounded-full bg-base-300 flex-shrink-0 flex items-center justify-center text-base leading-none select-none border border-transparent dark:border-white/80">
+        <div aria-hidden="true" className="w-8 h-8 rounded-full bg-base-300 flex-shrink-0 flex items-center justify-center text-base leading-none select-none border border-transparent dark:border-white/80">
           👤
         </div>
       </div>
@@ -106,11 +111,16 @@ export default function ChatBubble({ message }: ChatBubbleProps) {
   }
 
   return (
-    <div className="flex items-end gap-2.5 chat-bubble-animate">
+    <div
+      role="article"
+      aria-label="Ballot Buddy response"
+      className="flex items-end gap-2.5 chat-bubble-animate"
+    >
       {/* Bot avatar */}
       <img
         src="/logo.png"
-        alt="Bot Avatar"
+        alt=""
+        aria-hidden="true"
         className="w-8 h-8 rounded-full object-cover flex-shrink-0 border border-transparent dark:border-white/80"
       />
       <div className="flex flex-col gap-1 max-w-[80%]">
