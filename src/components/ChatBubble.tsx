@@ -1,10 +1,15 @@
 "use client";
 
 import type { ChatMessage } from "@/types";
-import ReactMarkdown from "react-markdown";
+import Image from "next/image";
+import dynamic from "next/dynamic";
 import StepsRenderer from "./StepsRenderer";
 import LinksRenderer from "./LinksRenderer";
 import PollingLocations from "./PollingLocations";
+
+const ReactMarkdown = dynamic(() => import("react-markdown"), {
+  loading: () => <span className="opacity-50">...</span>,
+});
 
 interface ChatBubbleProps {
   message: ChatMessage;
@@ -14,11 +19,12 @@ interface ChatBubbleProps {
 export function TypingBubble() {
   return (
     <div className="flex items-end gap-2.5">
-      {/* Avatar */}
-      <img
+      <Image
         src="/logo.png"
         alt=""
         aria-hidden="true"
+        width={32}
+        height={32}
         className="w-8 h-8 rounded-full object-cover flex-shrink-0 border border-transparent dark:border-white/80"
       />
       <div className="px-4 py-2.5 rounded-2xl rounded-bl-sm bg-gray-700 text-gray-100 border border-gray-600 shadow-sm">
@@ -117,10 +123,12 @@ export default function ChatBubble({ message }: ChatBubbleProps) {
       className="flex items-end gap-2.5 chat-bubble-animate"
     >
       {/* Bot avatar */}
-      <img
+      <Image
         src="/logo.png"
         alt=""
         aria-hidden="true"
+        width={32}
+        height={32}
         className="w-8 h-8 rounded-full object-cover flex-shrink-0 border border-transparent dark:border-white/80"
       />
       <div className="flex flex-col gap-1 max-w-[80%]">

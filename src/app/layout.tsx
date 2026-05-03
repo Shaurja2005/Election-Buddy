@@ -3,6 +3,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import Header from "@/components/Header";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 export const metadata: Metadata = {
   title: "Ballot Buddy — Your Election Assistant",
@@ -56,12 +57,14 @@ export default function RootLayout({
             Skip to main content
           </a>
 
-          <div className="min-h-screen flex flex-col bg-background transition-colors duration-300">
-            <Header />
-            <div id="main-content" role="main" tabIndex={-1} className="flex-1 flex flex-col">
-              {children}
+          <AuthProvider>
+            <div className="min-h-screen flex flex-col bg-background transition-colors duration-300">
+              <Header />
+              <div id="main-content" role="main" tabIndex={-1} className="flex-1 flex flex-col">
+                {children}
+              </div>
             </div>
-          </div>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

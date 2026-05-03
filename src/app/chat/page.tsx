@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import AddressInput from "@/components/AddressInput";
 import ChatInterface from "@/components/ChatInterface";
 import Sidebar from "@/components/Sidebar";
+import Image from "next/image";
 import { useChatHistory } from "@/hooks/useChatHistory";
 import { ChatSession } from "@/types";
 
@@ -125,9 +126,11 @@ export default function ChatApp() {
             {/* Header */}
             <div className="flex items-center px-4 py-3 bg-primary text-primary-content">
               <div className="flex items-center gap-3">
-                <img
+                <Image
                   src="/logo.png"
                   alt="Ballot Buddy Avatar"
+                  width={40}
+                  height={40}
                   className="w-10 h-10 rounded-full object-cover shadow-inner border-2 border-black"
                 />
                 <div className="flex flex-col">
