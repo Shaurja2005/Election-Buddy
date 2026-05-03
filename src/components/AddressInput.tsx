@@ -30,8 +30,7 @@ declare global {
   }
 }
 
-const MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
-
+// We will fetch the API key dynamically from the server to bypass Cloud Run build-time issues
 export default function AddressInput({
   address,
   onChange,
@@ -42,6 +41,19 @@ export default function AddressInput({
   const [geoError, setGeoError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const autocompleteRef = useRef<GooglePlaceAutocomplete | null>(null);
+  const [mapsKey, setMapsKey] = useState<string | null>(null);
+
+  // Fetch the API key at runtime so it works flawlessly in Cloud Run
+  useEffect(() => {
+    fetch('/api/config')
+      .then(res => res.json())
+      .then(data => {
+        if (data.mapsKey) {
+          setMapsKey(data.mapsKey);
+        }
+      })
+      .catch(console.error);
+  }, []);
 
   // Initialize Google Places Autocomplete once the Maps script is loaded
   const initAutocomplete = () => {
@@ -77,9 +89,9 @@ export default function AddressInput({
           const { latitude, longitude } = pos.coords;
 
           // Use Google Maps Geocoding API if key is available, else Nominatim fallback
-          if (MAPS_API_KEY) {
+          if (mapsKey) {
             const res = await fetch(
-              `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${MAPS_API_KEY}`
+              `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${mapsKey}`
             );
             const data = await res.json();
             const addr =
@@ -123,9 +135,9 @@ export default function AddressInput({
   return (
     <>
       {/* Load Google Maps Places library (only if key is configured) */}
-      {MAPS_API_KEY && (
+      {mapsKey && (
         <Script
-          src={`https://maps.googleapis.com/maps/api/js?key=${MAPS_API_KEY}&libraries=places`}
+          src={`https://maps.googleapis.com/maps/api/js?key=${mapsKey}&libraries=places`}
           strategy="afterInteractive"
           onLoad={initAutocomplete}
         />
