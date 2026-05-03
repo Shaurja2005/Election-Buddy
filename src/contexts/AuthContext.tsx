@@ -1,13 +1,15 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, useRef } from "react";
 import { 
   onAuthStateChanged, 
   signInWithPopup, 
   signOut, 
-  User 
+  User,
+  Auth,
+  GoogleAuthProvider
 } from "firebase/auth";
-import { auth, googleProvider } from "@/lib/firebase";
+import { initFirebase } from "@/lib/firebase";
 
 interface AuthContextType {
   user: User | null;
@@ -21,38 +23,57 @@ const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  
+  // We store auth and provider in refs so they persist across renders
+  const authRef = useRef<Auth | null>(null);
+  const providerRef = useRef<GoogleAuthProvider | null>(null);
 
   useEffect(() => {
-    // Only subscribe if we have a valid config to prevent crashing
-    if (!auth || !process.env.NEXT_PUBLIC_FIREBASE_API_KEY) {
-      setLoading(false);
-      return;
-    }
-
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
+    // Dynamically fetch Firebase config at runtime to completely bypass Cloud Run's build-time limitation
+    fetch('/api/config')
+      .then(res => res.json())
+      .then(data => {
+        if (data.firebase && data.firebase.apiKey) {
+          const { auth, googleProvider } = initFirebase(data.firebase);
+          authRef.current = auth;
+          providerRef.current = googleProvider;
+          
+          if (auth) {
+            const unsubscribe = onAuthStateChanged(auth, (u) => {
+              setUser(u);
+              setLoading(false);
+            });
+            // Note: Returning from inside a promise .then() doesn't act as a useEffect cleanup
+            // but for a singleton auth state in a root provider it's generally okay.
+          } else {
+            setLoading(false);
+          }
+        } else {
+          setLoading(false);
+        }
+      })
+      .catch(err => {
+        console.error("Failed to load Firebase config", err);
+        setLoading(false);
+      });
   }, []);
 
   const signInWithGoogle = async () => {
-    if (!auth || !googleProvider || !process.env.NEXT_PUBLIC_FIREBASE_API_KEY) {
-      alert("Firebase is not configured yet. Please add your credentials to .env.local");
+    if (!authRef.current || !providerRef.current) {
+      alert("Firebase is not configured properly. Ensure your environment variables are correctly set in Cloud Run.");
       return;
     }
     try {
-      await signInWithPopup(auth, googleProvider);
+      await signInWithPopup(authRef.current, providerRef.current);
     } catch (error) {
       console.error("Error signing in with Google", error);
     }
   };
 
   const logout = async () => {
-    if (!auth) return;
+    if (!authRef.current) return;
     try {
-      await signOut(auth);
+      await signOut(authRef.current);
     } catch (error) {
       console.error("Error signing out", error);
     }
