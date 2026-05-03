@@ -9,6 +9,7 @@ import {
   Auth,
   GoogleAuthProvider
 } from "firebase/auth";
+import { ref, uploadBytes, getDownloadURL, FirebaseStorage } from "firebase/storage";
 import { initFirebase } from "@/lib/firebase";
 import type { AuthContextType } from "@/types";
 
@@ -21,6 +22,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // We store auth and provider in refs so they persist across renders
   const authRef = useRef<Auth | null>(null);
   const providerRef = useRef<GoogleAuthProvider | null>(null);
+  const storageRef = useRef<FirebaseStorage | null>(null);
 
   useEffect(() => {
     // Dynamically fetch Firebase config at runtime to completely bypass Cloud Run's build-time limitation
@@ -28,9 +30,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       .then(res => res.json())
       .then(data => {
         if (data.firebase && data.firebase.apiKey) {
-          const { auth, googleProvider } = initFirebase(data.firebase);
+          const { auth, googleProvider, storage } = initFirebase(data.firebase);
           authRef.current = auth;
           providerRef.current = googleProvider;
+          storageRef.current = storage;
           
           if (auth) {
             const unsubscribe = onAuthStateChanged(auth, (u) => {
@@ -73,8 +76,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const uploadFile = async (file: File): Promise<string | null> => {
+    if (!storageRef.current || !user) {
+      alert("You must be signed in (and Firebase initialized) to upload files.");
+      return null;
+    }
+    try {
+      const fileRef = ref(storageRef.current, `uploads/${user.uid}/${Date.now()}_${file.name}`);
+      await uploadBytes(fileRef, file);
+      const url = await getDownloadURL(fileRef);
+      return url;
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      alert("Failed to upload file.");
+      return null;
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, signInWithGoogle, logout }}>
+    <AuthContext.Provider value={{ user, loading, signInWithGoogle, logout, uploadFile }}>
       {children}
     </AuthContext.Provider>
   );

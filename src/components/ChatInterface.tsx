@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import type { ChatMessage, ChatApiRequest, ChatApiResponse, ChatSession } from "@/types";
 import ChatBubble, { TypingBubble } from "./ChatBubble";
+import { useAuth } from "@/contexts/AuthContext";
 
 const QUICK_QUESTIONS = [
   "How do I register to vote?",
@@ -30,8 +31,11 @@ interface ChatInterfaceProps {
 export default function ChatInterface({ address, messages, onAddMessage }: ChatInterfaceProps) {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { uploadFile } = useAuth();
 
   // Auto-inject welcome message if empty
   useEffect(() => {
@@ -100,6 +104,18 @@ export default function ChatInterface({ address, messages, onAddMessage }: ChatI
     }
   };
 
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setIsUploading(true);
+    const url = await uploadFile(file);
+    if (url) {
+      setInput((prev) => prev + (prev ? "\n" : "") + `[Attached File: ${file.name}](${url})`);
+    }
+    setIsUploading(false);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -156,6 +172,29 @@ export default function ChatInterface({ address, messages, onAddMessage }: ChatI
         <div
           className="flex items-end gap-2 rounded-2xl border border-base-300 bg-base-200 px-4 py-2 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-all"
         >
+          <input 
+            type="file" 
+            ref={fileInputRef} 
+            onChange={handleFileUpload} 
+            className="hidden" 
+            accept="image/*,.pdf" 
+          />
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={isLoading || isUploading}
+            aria-label="Upload document"
+            className="flex-shrink-0 w-9 h-9 flex items-center justify-center rounded-xl bg-base-300 hover:bg-base-300/80 text-base-content/70 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 mb-0.5"
+          >
+            {isUploading ? (
+              <span className="loading loading-spinner loading-xs" />
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
+              </svg>
+            )}
+          </button>
+          
           <label htmlFor="chat-input" className="sr-only">
             Type your election question
           </label>

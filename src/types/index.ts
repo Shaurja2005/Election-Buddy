@@ -141,4 +141,5 @@ export interface AuthContextType {
   loading: boolean;
   signInWithGoogle: () => Promise<void>;
   logout: () => Promise<void>;
+  uploadFile: (file: File) => Promise<string | null>;
 }
