@@ -65,7 +65,7 @@ export default function ChatApp() {
   }
 
   return (
-    <div className="flex-1 flex h-[calc(100vh-3.5rem)] overflow-hidden relative">
+    <div className="flex-1 w-full h-full flex flex-col md:flex-row overflow-hidden relative">
       <Sidebar
         sessions={sessions}
         activeSessionId={activeSessionId}
@@ -96,7 +96,7 @@ export default function ChatApp() {
           </button>
         </div>
 
-        <div className="flex-1 max-w-4xl w-full mx-auto flex flex-col p-4 gap-4 overflow-hidden">
+        <div className="flex-1 max-w-4xl w-full mx-auto flex flex-col p-4 gap-4 overflow-y-auto min-h-0">
           {/* Address Input Section - Only show prominently if no address is set, otherwise small indicator */}
           {!activeSession.address ? (
             <section className="px-2 shrink-0 animate-in fade-in slide-in-from-top-4 duration-500">
@@ -121,7 +121,7 @@ export default function ChatApp() {
           )}
 
           {/* Chat Interface */}
-          <section className="card-themed overflow-hidden flex flex-col flex-1 min-h-0 relative shadow-sm">
+          <section className="card-themed overflow-hidden flex flex-col flex-1 min-h-[400px] relative shadow-sm">
             {/* Header */}
             <div className="flex items-center px-4 py-3 bg-primary text-primary-content">
               <div className="flex items-center gap-3">

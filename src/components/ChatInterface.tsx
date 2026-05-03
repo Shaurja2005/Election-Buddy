@@ -115,7 +115,7 @@ export default function ChatInterface({ address, messages, onAddMessage }: ChatI
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col flex-1 min-h-0 h-full w-full">
 
       {/* ── Message list (aria-live for screen readers) ── */}
       <div

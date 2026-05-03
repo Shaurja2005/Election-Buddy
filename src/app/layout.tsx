@@ -58,7 +58,7 @@ export default function RootLayout({
 
           <div className="min-h-screen flex flex-col bg-background transition-colors duration-300">
             <Header />
-            <div id="main-content" role="main" tabIndex={-1}>
+            <div id="main-content" role="main" tabIndex={-1} className="flex-1 flex flex-col">
               {children}
             </div>
           </div>
