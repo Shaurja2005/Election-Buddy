@@ -10,6 +10,11 @@ interface AddressInputProps {
   disabled?: boolean;
 }
 
+interface GooglePlaceAutocomplete {
+  addListener: (event: string, handler: () => void) => void;
+  getPlace: () => { formatted_address?: string };
+}
+
 declare global {
   interface Window {
     google?: {
@@ -18,10 +23,7 @@ declare global {
           Autocomplete: new (
             input: HTMLInputElement,
             opts?: object
-          ) => {
-            addListener: (event: string, handler: () => void) => void;
-            getPlace: () => { formatted_address?: string };
-          };
+          ) => GooglePlaceAutocomplete;
         };
       };
     };
@@ -39,7 +41,7 @@ export default function AddressInput({
   const [locating, setLocating] = useState(false);
   const [geoError, setGeoError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const autocompleteRef = useRef<ReturnType<NonNullable<NonNullable<Window["google"]>["maps"]>["places"]["Autocomplete"]> | null>(null);
+  const autocompleteRef = useRef<GooglePlaceAutocomplete | null>(null);
 
   // Initialize Google Places Autocomplete once the Maps script is loaded
   const initAutocomplete = () => {
