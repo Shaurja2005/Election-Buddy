@@ -10,13 +10,7 @@ import {
   GoogleAuthProvider
 } from "firebase/auth";
 import { initFirebase } from "@/lib/firebase";
-
-interface AuthContextType {
-  user: User | null;
-  loading: boolean;
-  signInWithGoogle: () => Promise<void>;
-  logout: () => Promise<void>;
-}
+import type { AuthContextType } from "@/types";
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 

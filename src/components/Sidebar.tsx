@@ -1,16 +1,6 @@
 "use client";
 
-import { ChatSession } from "@/types";
-
-interface SidebarProps {
-  sessions: ChatSession[];
-  activeSessionId: string | null;
-  onSelect: (id: string) => void;
-  onNewChat: () => void;
-  onDelete: (id: string) => void;
-  isOpen: boolean;
-  onClose: () => void;
-}
+import type { ChatSession, SidebarProps } from "@/types";
 
 export default function Sidebar({
   sessions,

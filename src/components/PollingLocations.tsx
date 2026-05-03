@@ -1,10 +1,6 @@
 "use client";
 
-import type { PollingLocation } from "@/types";
-
-interface PollingLocationsProps {
-  locations: PollingLocation[];
-}
+import type { PollingLocation, PollingLocationsProps } from "@/types";
 
 export default function PollingLocations({ locations }: PollingLocationsProps) {
   if (!locations || locations.length === 0) return null;

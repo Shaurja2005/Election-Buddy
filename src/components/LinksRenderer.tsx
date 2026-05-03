@@ -1,6 +1,6 @@
 "use client";
 
-import type { ElectionLink } from "@/types";
+import type { ElectionLink, LinksRendererProps } from "@/types";
 
 const TYPE_CONFIG: Record<
   ElectionLink["type"],
@@ -32,11 +32,6 @@ const TYPE_CONFIG: Record<
     badgeClass: "badge-ghost",
   },
 };
-
-interface LinksRendererProps {
-  links: ElectionLink[];
-  title?: string;
-}
 
 export default function LinksRenderer({
   links,

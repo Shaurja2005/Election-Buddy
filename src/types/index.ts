@@ -1,4 +1,5 @@
 // Shared TypeScript types for the Election Assistant
+import type { User } from "firebase/auth";
 
 export type MessageRole = "user" | "assistant";
 
@@ -90,4 +91,54 @@ export interface ChatApiResponse {
   structuredData?: StructuredData;
   civicData?: CivicElectionInfo;
   error?: string;
+}
+
+// ---------- COMPONENT PROPS ----------
+
+export interface StepsRendererProps {
+  text: string;
+}
+
+export interface PollingLocationsProps {
+  locations: PollingLocation[];
+}
+
+export interface AddressInputProps {
+  address: string;
+  onChange: (val: string) => void;
+  onSubmit: (address: string) => void;
+  disabled?: boolean;
+}
+
+export interface GooglePlaceAutocomplete {
+  addListener: (event: string, handler: () => void) => void;
+  getPlace: () => { formatted_address?: string };
+}
+
+export interface LinksRendererProps {
+  links: ElectionLink[];
+  title?: string;
+}
+
+export interface ChatBubbleProps {
+  message: ChatMessage;
+}
+
+export interface SidebarProps {
+  sessions: ChatSession[];
+  activeSessionId: string | null;
+  onSelect: (id: string) => void;
+  onNewChat: () => void;
+  onDelete: (id: string) => void;
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+// ---------- CONTEXT TYPES ----------
+
+export interface AuthContextType {
+  user: User | null;
+  loading: boolean;
+  signInWithGoogle: () => Promise<void>;
+  logout: () => Promise<void>;
 }

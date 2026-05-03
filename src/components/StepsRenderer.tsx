@@ -1,11 +1,7 @@
 "use client";
 
-import type { ElectionStep } from "@/types";
+import type { ElectionStep, StepsRendererProps } from "@/types";
 import ReactMarkdown from "react-markdown";
-
-interface StepsRendererProps {
-  text: string;
-}
 
 // Parse numbered steps from AI response text
 function parseSteps(text: string): ElectionStep[] {

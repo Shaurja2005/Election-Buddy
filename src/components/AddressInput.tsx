@@ -2,18 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import Script from "next/script";
-
-interface AddressInputProps {
-  address: string;
-  onChange: (val: string) => void;
-  onSubmit: (address: string) => void;
-  disabled?: boolean;
-}
-
-interface GooglePlaceAutocomplete {
-  addListener: (event: string, handler: () => void) => void;
-  getPlace: () => { formatted_address?: string };
-}
+import type { AddressInputProps, GooglePlaceAutocomplete } from "@/types";
 
 declare global {
   interface Window {

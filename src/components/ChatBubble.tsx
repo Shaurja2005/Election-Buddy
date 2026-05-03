@@ -1,6 +1,6 @@
 "use client";
 
-import type { ChatMessage } from "@/types";
+import type { ChatMessage, ChatBubbleProps } from "@/types";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import StepsRenderer from "./StepsRenderer";
@@ -10,10 +10,6 @@ import PollingLocations from "./PollingLocations";
 const ReactMarkdown = dynamic(() => import("react-markdown"), {
   loading: () => <span className="opacity-50">...</span>,
 });
-
-interface ChatBubbleProps {
-  message: ChatMessage;
-}
 
 // Typing indicator bubble
 export function TypingBubble() {
