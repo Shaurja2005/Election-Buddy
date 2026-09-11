@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <style>
+      .bg-color { fill: transparent; }
+      .base-light { fill: #cbd5e1; }
+      .base-dark { fill: #94a3b8; }
+      .column { fill: #f8fafc; }
+      .column-shadow { fill: #e2e8f0; }
+      .building-bg { fill: #334155; }
+      .door { fill: #0f172a; }
+      .roof-light { fill: #64748b; }
+      .roof-dark { fill: #475569; }
+      .banner { fill: #fbbf24; }
+      .banner-text { 
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+        font-size: 11px; 
+        font-weight: 800; 
+        fill: #1e293b; 
+        text-anchor: middle; 
+      }
+      .box { fill: #f1f5f9; }
+      .box-lid { fill: #94a3b8; }
+      .paper { fill: #ffffff; }
+      .tick { fill: none; stroke: #16a34a; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect class="bg-color" width="200" height="200" />
+
+  <!-- Building Main Background -->
+  <rect class="building-bg" x="35" y="80" width="130" height="80" />
+
+  <!-- Door -->
+  <rect class="door" x="85" y="120" width="30" height="40" rx="2" />
+  <!-- Door handles -->
+  <circle cx="97" cy="140" r="1.5" fill="#cbd5e1" />
+  <circle cx="103" cy="140" r="1.5" fill="#cbd5e1" />
+
+  <!-- Columns -->
+  <!-- Column 1 -->
+  <rect class="column" x="35" y="80" width="14" height="80" />
+  <rect class="column-shadow" x="45" y="80" width="4" height="80" />
+  <!-- Column 2 -->
+  <rect class="column" x="73" y="80" width="14" height="80" />
+  <rect class="column-shadow" x="83" y="80" width="4" height="80" />
+  <!-- Column 3 -->
+  <rect class="column" x="113" y="80" width="14" height="80" />
+  <rect class="column-shadow" x="123" y="80" width="4" height="80" />
+  <!-- Column 4 -->
+  <rect class="column" x="151" y="80" width="14" height="80" />
+  <rect class="column-shadow" x="161" y="80" width="4" height="80" />
+
+  <!-- Base Steps -->
+  <rect class="base-light" x="25" y="160" width="150" height="10" rx="1" />
+  <rect class="base-dark" x="15" y="170" width="170" height="10" rx="1" />
+  
+  <!-- Column Caps & Bases -->
+  <rect class="base-light" x="32" y="155" width="20" height="5" />
+  <rect class="base-light" x="70" y="155" width="20" height="5" />
+  <rect class="base-light" x="110" y="155" width="20" height="5" />
+  <rect class="base-light" x="148" y="155" width="20" height="5" />
+  
+  <rect class="base-light" x="32" y="80" width="20" height="5" />
+  <rect class="base-light" x="70" y="80" width="20" height="5" />
+  <rect class="base-light" x="110" y="80" width="20" height="5" />
+  <rect class="base-light" x="148" y="80" width="20" height="5" />
+
+  <!-- Roof / Pediment -->
+  <polygon class="roof-light" points="100,15 15,80 185,80" />
+  <polygon class="roof-dark" points="100,32 38,75 162,75" />
+
+  <!-- Ballot Box Icon in Pediment -->
+  <!-- Paper inserting -->
+  <g transform="rotate(12, 100, 48)">
+    <rect class="paper" x="93" y="42" width="14" height="16" rx="1" />
+    <path class="tick" d="M 96 50 L 99 53 L 104 46" />
+  </g>
+  <!-- Box -->
+  <rect class="box" x="90" y="52" width="20" height="18" rx="1" />
+  <rect class="box-lid" x="88" y="50" width="24" height="4" rx="1" />
+  <rect fill="#cbd5e1" x="98" y="58" width="4" height="6" rx="0.5" />
+
+  <!-- Polling Station Banner -->
+  <rect class="banner" x="42" y="95" width="116" height="22" rx="3" />
+  <!-- Text -->
+  <text class="banner-text" x="100" y="110">POLLING BOOTH</text>
+
+  <!-- Banner details (hanging ropes/ties) -->
+  <line x1="42" y1="95" x2="35" y2="90" stroke="#fbbf24" stroke-width="1.5" />
+  <line x1="158" y1="95" x2="165" y2="90" stroke="#fbbf24" stroke-width="1.5" />
+  <line x1="42" y1="117" x2="35" y2="122" stroke="#fbbf24" stroke-width="1.5" />
+  <line x1="158" y1="117" x2="165" y2="122" stroke="#fbbf24" stroke-width="1.5" />
+</svg>

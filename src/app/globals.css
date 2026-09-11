@@ -254,3 +254,43 @@ body {
   color: var(--card-foreground);
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
+/* ── Voting game ── */
+.game-state {
+  fill: #9dc3a5;
+  stroke: #ffffff;
+  stroke-width: 0.6;
+  cursor: pointer;
+  transition: fill 0.15s ease;
+}
+
+.game-state:hover {
+  fill: #1f3a93;
+}
+
+.game-evm-btn {
+  cursor: pointer;
+  transition: filter 0.12s ease;
+}
+
+.game-evm-btn:hover {
+  filter: brightness(1.25);
+}
+
+@keyframes game-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-5px); }
+  40% { transform: translateX(5px); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(3px); }
+}
+
+.game-shake {
+  animation: game-shake 0.4s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .game-shake {
+    animation: none;
+    outline: 3px solid #b8433a;
+  }
+}
