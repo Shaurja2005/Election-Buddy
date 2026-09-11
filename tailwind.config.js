@@ -10,7 +10,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
+        sans: ["var(--font-latin)", "Inter", "system-ui", "sans-serif"],
       },
       colors: {
         // Map CSS vars so Tailwind utilities like bg-primary work

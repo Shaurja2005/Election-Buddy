@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+/* Fonts are loaded by next/font in app/layout.tsx and exposed as --font-* vars. */
 
 /* ── OKLCH Theme Variables ── */
 :root {
@@ -52,8 +52,37 @@
 
 /* ── Base ── */
 html {
-  font-family: "Inter", system-ui, sans-serif;
+  font-family: var(--font-script, var(--font-latin)), "Inter", system-ui, sans-serif;
+  line-height: var(--script-leading, 1.5);
   scroll-behavior: smooth;
+}
+
+/* ── Per-script typography ──
+   Indic scripts carry stacked matras and conjuncts that clip at Latin leading,
+   so each script sets its own. Nastaliq slopes steeply and needs the most. */
+html[data-font="latin"]     { --font-script: var(--font-latin);     --script-leading: 1.5; }
+html[data-font="devanagari"]{ --font-script: var(--font-devanagari);--script-leading: 1.75; }
+html[data-font="bengali"]   { --font-script: var(--font-bengali);   --script-leading: 1.75; }
+html[data-font="tamil"]     { --font-script: var(--font-tamil);     --script-leading: 1.8; }
+html[data-font="telugu"]    { --font-script: var(--font-telugu);    --script-leading: 1.85; }
+html[data-font="kannada"]   { --font-script: var(--font-kannada);   --script-leading: 1.85; }
+html[data-font="malayalam"] { --font-script: var(--font-malayalam); --script-leading: 1.8; }
+html[data-font="urdu"]      { --font-script: var(--font-urdu);      --script-leading: 2.1; }
+
+/* Nastaliq's ascenders and descenders overrun tight boxes; give controls room. */
+html[data-font="urdu"] .btn,
+html[data-font="urdu"] input,
+html[data-font="urdu"] textarea {
+  line-height: 2;
+  padding-block: 0.35rem;
+  height: auto;
+  min-height: 2.5rem;
+}
+
+/* Latin runs inside Indic text (URLs, EPIC, EVM) keep the Latin face. */
+[dir] [lang="en"],
+.font-latin {
+  font-family: var(--font-latin), "Inter", system-ui, sans-serif;
 }
 
 body {

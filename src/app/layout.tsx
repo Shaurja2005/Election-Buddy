@@ -1,9 +1,81 @@
 import type { Metadata } from "next";
+import {
+  Inter,
+  Noto_Sans_Devanagari,
+  Noto_Sans_Bengali,
+  Noto_Sans_Tamil,
+  Noto_Sans_Telugu,
+  Noto_Sans_Kannada,
+  Noto_Sans_Malayalam,
+  Noto_Nastaliq_Urdu,
+} from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import Header from "@/components/Header";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { LanguageProvider } from "@/contexts/LanguageContext";
+import SkipLink from "@/components/SkipLink";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-latin",
+  display: "swap",
+});
+
+const notoDevanagari = Noto_Sans_Devanagari({
+  subsets: ["devanagari", "latin"],
+  variable: "--font-devanagari",
+  display: "swap",
+});
+
+const notoBengali = Noto_Sans_Bengali({
+  subsets: ["bengali", "latin"],
+  variable: "--font-bengali",
+  display: "swap",
+});
+
+const notoTamil = Noto_Sans_Tamil({
+  subsets: ["tamil", "latin"],
+  variable: "--font-tamil",
+  display: "swap",
+});
+
+const notoTelugu = Noto_Sans_Telugu({
+  subsets: ["telugu", "latin"],
+  variable: "--font-telugu",
+  display: "swap",
+});
+
+const notoKannada = Noto_Sans_Kannada({
+  subsets: ["kannada", "latin"],
+  variable: "--font-kannada",
+  display: "swap",
+});
+
+const notoMalayalam = Noto_Sans_Malayalam({
+  subsets: ["malayalam", "latin"],
+  variable: "--font-malayalam",
+  display: "swap",
+});
+
+// Nastaliq ships only a variable weight axis; keep it at one weight.
+const notoNastaliqUrdu = Noto_Nastaliq_Urdu({
+  subsets: ["arabic"],
+  variable: "--font-urdu",
+  display: "swap",
+});
+
+const fontVariables = [
+  inter.variable,
+  notoDevanagari.variable,
+  notoBengali.variable,
+  notoTamil.variable,
+  notoTelugu.variable,
+  notoKannada.variable,
+  notoMalayalam.variable,
+  notoNastaliqUrdu.variable,
+].join(" ");
 
 export const metadata: Metadata = {
   title: "Ballot Buddy — Your Election Assistant",
@@ -35,7 +107,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" dir="ltr" data-font="latin" className={fontVariables} suppressHydrationWarning>
       <body
         className="min-h-screen bg-base-100 antialiased"
         suppressHydrationWarning
@@ -49,22 +121,18 @@ export default function RootLayout({
           forcedTheme="dark"
           enableSystem={false}
         >
-          {/* Skip Navigation Link for Accessibility */}
-          <a
-            href="#main-content"
-            className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[9999] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-content focus:rounded-lg focus:font-semibold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
-          >
-            Skip to main content
-          </a>
+          <LanguageProvider>
+            <SkipLink />
 
-          <AuthProvider>
-            <div className="min-h-screen flex flex-col bg-background transition-colors duration-300">
-              <Header />
-              <div id="main-content" role="main" tabIndex={-1} className="flex-1 flex flex-col">
-                {children}
+            <AuthProvider>
+              <div className="min-h-screen flex flex-col bg-background transition-colors duration-300">
+                <Header />
+                <div id="main-content" role="main" tabIndex={-1} className="flex-1 flex flex-col">
+                  {children}
+                </div>
               </div>
-            </div>
-          </AuthProvider>
+            </AuthProvider>
+          </LanguageProvider>
         </ThemeProvider>
       </body>
     </html>
