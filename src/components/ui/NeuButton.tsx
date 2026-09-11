@@ -23,9 +23,11 @@ const SIZE: Record<Size, string> = {
 };
 
 interface NeuButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  /** Render as a link (e.g. next/link) when the action navigates. */
+  /** Render as a link (e.g. next/link or "a") when the action navigates. */
   as?: ElementType;
   href?: string;
+  target?: string;
+  rel?: string;
   variant?: Variant;
   size?: Size;
   /** Rendered before the label; pass a lucide icon, never an emoji. */
