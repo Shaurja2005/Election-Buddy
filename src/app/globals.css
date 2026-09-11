@@ -231,6 +231,21 @@ body {
   animation: bubble-in 0.25s ease forwards;
 }
 
+/* ── VVPAT slip ──
+   The slip is printed and pushed up behind the window, so it enters from
+   below rather than fading in. */
+@keyframes slip-in {
+  from {
+    opacity: 0;
+    transform: translateY(2.5rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* ── Card border ── */
 .card-themed {
   background-color: var(--card);
