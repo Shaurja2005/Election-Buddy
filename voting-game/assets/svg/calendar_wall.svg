@@ -1,0 +1,141 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <defs>
+    <!-- Drop Shadow Filter -->
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="10" stdDeviation="15" flood-opacity="0.1" flood-color="#000000" />
+    </filter>
+    
+    <!-- Styles -->
+    <style>
+      .bg { fill: #f1f5f9; }
+      .cal-bg { fill: #ffffff; filter: url(#shadow); }
+      .cal-header { fill: #ef4444; }
+      .cal-header-text { 
+        fill: #ffffff; 
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+        font-size: 24px; 
+        font-weight: 700; 
+        text-anchor: middle; 
+        dominant-baseline: central;
+      }
+      .day-name { 
+        fill: #64748b; 
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+        font-size: 13px; 
+        font-weight: 600; 
+        text-anchor: middle; 
+        dominant-baseline: central;
+      }
+      .day-num { 
+        fill: #1e293b; 
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+        font-size: 18px; 
+        font-weight: 500; 
+        text-anchor: middle; 
+        dominant-baseline: central;
+      }
+      .day-num-weekend { 
+        fill: #94a3b8; 
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+        font-size: 18px; 
+        font-weight: 500; 
+        text-anchor: middle; 
+        dominant-baseline: central;
+      }
+      .current-day-bg { fill: #ef4444; }
+      .current-day-text { 
+        fill: #ffffff; 
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+        font-size: 18px; 
+        font-weight: 700; 
+        text-anchor: middle; 
+        dominant-baseline: central;
+      }
+      .binder-ring { fill: #e2e8f0; stroke: #cbd5e1; stroke-width: 2; }
+      .binder-ring-inner { fill: #ffffff; }
+      .binder-hole { fill: #1e293b; opacity: 0.8; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect class="bg" width="400" height="400" />
+
+  <!-- Calendar Base -->
+  <rect class="cal-bg" x="25" y="40" width="350" height="320" rx="20" />
+
+  <!-- Calendar Header (Red Banner) -->
+  <path class="cal-header" d="M25,60 a20,20 0 0,1 20,-20 h310 a20,20 0 0,1 20,20 v50 h-350 v-50 z" />
+  
+  <!-- Header Text -->
+  <text class="cal-header-text" x="200" y="68">AUGUST</text>
+
+  <!-- Binder Rings -->
+  <!-- Left Ring -->
+  <rect class="binder-ring" x="80" y="20" width="16" height="45" rx="8" />
+  <rect class="binder-ring-inner" x="84" y="24" width="8" height="37" rx="4" />
+  <circle class="binder-hole" cx="88" cy="52" r="5" />
+  
+  <!-- Right Ring -->
+  <rect class="binder-ring" x="304" y="20" width="16" height="45" rx="8" />
+  <rect class="binder-ring-inner" x="308" y="24" width="8" height="37" rx="4" />
+  <circle class="binder-hole" cx="312" cy="52" r="5" />
+
+  <!-- Days of the Week -->
+  <text class="day-name" x="50" y="125">SUN</text>
+  <text class="day-name" x="100" y="125">MON</text>
+  <text class="day-name" x="150" y="125">TUE</text>
+  <text class="day-name" x="200" y="125">WED</text>
+  <text class="day-name" x="250" y="125">THU</text>
+  <text class="day-name" x="300" y="125">FRI</text>
+  <text class="day-name" x="350" y="125">SAT</text>
+
+  <!-- Grid Line Separator -->
+  <line x1="35" y1="145" x2="365" y2="145" stroke="#e2e8f0" stroke-width="1.5" />
+
+  <!-- Dates -->
+  <!-- Row 1 -->
+  <text class="day-num" x="200" y="175">1</text>
+  <text class="day-num" x="250" y="175">2</text>
+  <text class="day-num" x="300" y="175">3</text>
+  <text class="day-num-weekend" x="350" y="175">4</text>
+
+  <!-- Row 2 -->
+  <text class="day-num-weekend" x="50" y="215">5</text>
+  <text class="day-num" x="100" y="215">6</text>
+  <text class="day-num" x="150" y="215">7</text>
+  <text class="day-num" x="200" y="215">8</text>
+  <text class="day-num" x="250" y="215">9</text>
+  <text class="day-num" x="300" y="215">10</text>
+  <text class="day-num-weekend" x="350" y="215">11</text>
+
+  <!-- Row 3 -->
+  <text class="day-num-weekend" x="50" y="255">12</text>
+  <text class="day-num" x="100" y="255">13</text>
+  
+  <!-- Current Day Highlight (14) -->
+  <circle class="current-day-bg" cx="150" cy="255" r="18" />
+  <text class="current-day-text" x="150" y="255">14</text>
+
+  <text class="day-num" x="200" y="255">15</text>
+  <text class="day-num" x="250" y="255">16</text>
+  <text class="day-num" x="300" y="255">17</text>
+  <text class="day-num-weekend" x="350" y="255">18</text>
+
+  <!-- Row 4 -->
+  <text class="day-num-weekend" x="50" y="295">19</text>
+  <text class="day-num" x="100" y="295">20</text>
+  <text class="day-num" x="150" y="295">21</text>
+  <text class="day-num" x="200" y="295">22</text>
+  <text class="day-num" x="250" y="295">23</text>
+  <text class="day-num" x="300" y="295">24</text>
+  <text class="day-num-weekend" x="350" y="295">25</text>
+
+  <!-- Row 5 -->
+  <text class="day-num-weekend" x="50" y="335">26</text>
+  <text class="day-num" x="100" y="335">27</text>
+  <text class="day-num" x="150" y="335">28</text>
+  <text class="day-num" x="200" y="335">29</text>
+  <text class="day-num" x="250" y="335">30</text>
+  <text class="day-num" x="300" y="335">31</text>
+
+</svg>
