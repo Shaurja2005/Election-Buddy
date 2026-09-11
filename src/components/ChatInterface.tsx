@@ -171,7 +171,7 @@ export default function ChatInterface({ address, messages, onAddMessage }: ChatI
       {/* ── Input area ── */}
       <div className="px-4 py-3 border-t border-base-200 bg-base-100" role="form" aria-label={t("chat.inputFormLabel")}>
         <div
-          className="flex items-end gap-2 rounded-2xl border border-base-300 bg-base-200 px-4 py-2 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-all"
+          className="flex min-w-0 items-end gap-2 rounded-2xl border border-base-300 bg-base-200 px-3 py-2 sm:px-4 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-all"
         >
           <input 
             type="file" 
@@ -203,7 +203,7 @@ export default function ChatInterface({ address, messages, onAddMessage }: ChatI
             ref={inputRef}
             id="chat-input"
             rows={1}
-            className="flex-1 resize-none bg-transparent text-base-content placeholder-base-content/40 text-sm focus:outline-none max-h-32 leading-relaxed py-1"
+            className="min-w-0 flex-1 resize-none bg-transparent text-base-content placeholder-base-content/40 text-sm focus:outline-none max-h-32 leading-relaxed py-1"
             placeholder={t("chat.placeholder")}
             value={input}
             onChange={handleInput}

@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Pause, Play } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 
@@ -12,7 +12,6 @@ const POINTS = ["register", "booth", "neutral"] as const;
 export default function LandingPage() {
   const { t } = useLanguage();
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [playing, setPlaying] = useState(true);
 
   // [[…]] marks the accented half, which lands in a different position per language.
   const [heroLead, heroAccent = ""] = t("landing.hero").split(/\[\[|\]\]/).filter(Boolean);
@@ -20,24 +19,11 @@ export default function LandingPage() {
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       videoRef.current?.pause();
-      setPlaying(false);
     }
   }, []);
 
-  const toggleVideo = () => {
-    const v = videoRef.current;
-    if (!v) return;
-    if (v.paused) {
-      void v.play();
-      setPlaying(true);
-    } else {
-      v.pause();
-      setPlaying(false);
-    }
-  };
-
   return (
-    <main className="relative isolate flex h-[100svh] min-h-[36rem] w-full flex-col overflow-hidden bg-[#f4efe6] text-[#0b1f3f]">
+    <main className="relative isolate flex min-h-[100svh] w-full flex-col overflow-x-hidden overflow-y-auto bg-[#f4efe6] text-[#0b1f3f]">
       <video
         ref={videoRef}
         className="absolute inset-0 -z-20 h-full w-full object-cover"
@@ -59,7 +45,7 @@ export default function LandingPage() {
       <header className="flex items-center justify-between gap-4 px-5 pt-5 sm:px-10 sm:pt-7">
         <Link href="/" className="flex items-center gap-2.5" aria-label={t("brand.home")}>
           <Image
-            src="/logo.png"
+            src="/logo.svg"
             alt=""
             width={36}
             height={36}
@@ -71,18 +57,8 @@ export default function LandingPage() {
           </span>
         </Link>
 
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={toggleVideo}
-            aria-label={playing ? t("landing.pauseVideo") : t("landing.playVideo")}
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-white/70 text-[#0b1f3f] ring-1 ring-[#0b1f3f]/15 backdrop-blur-md transition hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0b1f3f]"
-          >
-            {playing ? <Pause size={15} aria-hidden="true" /> : <Play size={15} aria-hidden="true" />}
-          </button>
-          <div className="dark rounded-full bg-[#0b1f3f] text-white shadow-lg shadow-[#0b1f3f]/20">
-            <LanguageSwitcher />
-          </div>
+        <div className="dark rounded-full bg-[#0b1f3f] text-white shadow-lg shadow-[#0b1f3f]/20">
+          <LanguageSwitcher />
         </div>
       </header>
 

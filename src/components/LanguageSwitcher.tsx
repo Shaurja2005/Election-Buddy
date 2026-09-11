@@ -62,7 +62,7 @@ export default function LanguageSwitcher({ className = "" }: { className?: strin
           <path d="M3 12h18" />
           <path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18Z" />
         </svg>
-        <span className="max-w-[7rem] truncate">{LOCALES[locale].native}</span>
+        <span className="max-w-[7rem] truncate max-[420px]:hidden">{LOCALES[locale].native}</span>
         <svg
           className={`h-3 w-3 opacity-60 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
           viewBox="0 0 24 24"

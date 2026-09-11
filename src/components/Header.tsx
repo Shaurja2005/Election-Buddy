@@ -19,28 +19,28 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 bg-base-100/80 backdrop-blur-md border-b border-base-200 transition-colors duration-300">
-      <div className="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
+      <div className="mx-auto flex h-14 max-w-4xl items-center justify-between gap-2 px-3 sm:px-4">
         {/* Brand */}
         <Link
           href="/"
-          className="flex items-center gap-2.5 hover:opacity-80 transition-opacity"
+          className="flex min-w-0 items-center gap-2.5 hover:opacity-80 transition-opacity"
           aria-label={t("brand.home")}
         >
           <Image
-            src="/logo.png"
+            src="/logo.svg"
             alt={t("brand.logoAlt")}
             width={32}
             height={32}
             className="w-8 h-8 rounded-full object-cover"
           />
           <div className="leading-tight">
-            <h1 className="text-sm font-bold text-base-content">{t("brand.name")}</h1>
-            <p className="text-[11px] text-base-content/50">{t("brand.tagline")}</p>
+            <h1 className="truncate text-sm font-bold text-base-content">{t("brand.name")}</h1>
+            <p className="truncate text-[11px] text-base-content/50">{t("brand.tagline")}</p>
           </div>
         </Link>
 
         {/* Right actions */}
-        <nav aria-label={t("header.portalsMenuLabel")} className="flex items-center gap-2">
+        <nav aria-label={t("header.portalsMenuLabel")} className="flex shrink-0 items-center gap-1 sm:gap-2">
           <LanguageSwitcher />
 
           {/* Auth Button */}
@@ -49,7 +49,7 @@ export default function Header() {
               <div className="dropdown dropdown-end">
                 <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar border border-base-200 transition-transform hover:scale-105">
                   <div className="w-7 h-7 rounded-full">
-                    <Image src={user.photoURL || "/logo.png"} alt={t("header.profileAlt")} width={28} height={28} className="object-cover" />
+                    <Image src={user.photoURL || "/logo.svg"} alt={t("header.profileAlt")} width={28} height={28} className="object-cover" />
                   </div>
                 </div>
                 <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow-lg menu menu-sm dropdown-content bg-base-100 rounded-xl w-52 border border-base-200">
@@ -92,7 +92,7 @@ export default function Header() {
                 <path d="M3 12h18" />
                 <path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18Z" />
               </svg>
-              {t("header.officialPortals")}
+              <span className="hidden sm:inline">{t("header.officialPortals")}</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-3 w-3 opacity-60"

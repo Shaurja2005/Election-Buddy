@@ -129,7 +129,7 @@ export default function ChatWorkspace() {
             <div className="flex items-center px-4 py-3 bg-primary text-primary-content">
               <div className="flex items-center gap-3">
                 <Image
-                  src="/logo.png"
+                  src="/logo.svg"
                   alt={t("chat.avatarAlt")}
                   width={40}
                   height={40}

@@ -23,7 +23,7 @@ export default function PollingLocations({ locations }: PollingLocationsProps) {
                     {idx + 1}
                   </span>
                 </div>
-                <div className="flex-1">
+                <div className="min-w-0 flex-1">
                   <h3 className="font-semibold text-sm text-base-content">
                     {loc.name}
                   </h3>

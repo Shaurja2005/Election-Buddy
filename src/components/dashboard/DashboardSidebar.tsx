@@ -39,7 +39,8 @@ export default function DashboardSidebar({
           "fixed inset-y-0 start-0 z-50 flex flex-col bg-nm-surface",
           "transition-[transform,inline-size] duration-300 ease-out motion-reduce:transition-none",
           "md:static md:translate-x-0 md:rtl:translate-x-0",
-          collapsed ? "w-[4.75rem]" : "w-64",
+          "w-64",
+          collapsed ? "md:w-[4.75rem]" : "",
           mobileOpen ? "translate-x-0" : "-translate-x-full rtl:translate-x-full",
         ].join(" ")}
       >
@@ -50,7 +51,7 @@ export default function DashboardSidebar({
             aria-label={t("nav.backToSite")}
           >
             <Image
-              src="/logo.png"
+              src="/logo.svg"
               alt=""
               aria-hidden="true"
               width={32}

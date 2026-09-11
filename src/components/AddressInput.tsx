@@ -162,7 +162,7 @@ export default function AddressInput({
             id="address-input"
             type="text"
             placeholder={t("address.placeholder")}
-            className="flex-1 bg-transparent border-none focus:outline-none focus:ring-0 text-sm py-3 px-1 text-base-content placeholder-base-content/40"
+            className="min-w-0 flex-1 bg-transparent border-none focus:outline-none focus:ring-0 text-sm py-3 px-1 text-base-content placeholder-base-content/40"
             value={address}
             onChange={(e) => onChange(e.target.value)}
             disabled={disabled || locating}

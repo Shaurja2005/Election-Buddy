@@ -17,7 +17,7 @@ export function TypingBubble() {
   return (
     <div className="flex items-end gap-2.5">
       <Image
-        src="/logo.png"
+        src="/logo.svg"
         alt=""
         aria-hidden="true"
         width={32}
@@ -127,14 +127,14 @@ export default function ChatBubble({ message }: ChatBubbleProps) {
     >
       {/* Bot avatar */}
       <Image
-        src="/logo.png"
+        src="/logo.svg"
         alt=""
         aria-hidden="true"
         width={32}
         height={32}
         className="w-8 h-8 rounded-full object-cover flex-shrink-0 border border-transparent dark:border-white/80"
       />
-      <div className="flex flex-col gap-1 max-w-[80%]">
+      <div className="flex min-w-0 max-w-[80%] flex-col gap-1">
         <div className="px-4 py-2.5 rounded-2xl rounded-es-sm bg-gray-700 text-gray-100 border border-gray-600 shadow-sm text-sm leading-relaxed">
           {renderAssistantContent()}
         </div>

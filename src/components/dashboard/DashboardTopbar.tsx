@@ -38,7 +38,7 @@ export default function DashboardTopbar({ onOpenMenu }: { onOpenMenu: () => void
           (user ? (
             <div className="flex items-center gap-2">
               <Image
-                src={user.photoURL || "/logo.png"}
+                src={user.photoURL || "/logo.svg"}
                 alt={t("header.profileAlt")}
                 width={32}
                 height={32}

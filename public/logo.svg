@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Election Assistant logo</title>
+  <desc id="desc">Orange and green directional arrows around a blue magnifying glass with a voting checkmark.</desc>
+  <rect width="256" height="256" fill="#fff"/>
+  <path fill="#f7931e" d="M30 113 59 99a76 76 0 0 1 66-45l-5-18 22 22-22 22 4-15a61 61 0 0 0-51 42l-22 11 8 15Z"/>
+  <path fill="#f7931e" d="m38 139 17-7a75 75 0 0 1 18 35l-21 18a93 93 0 0 0-14-46Z"/>
+  <path fill="#128329" d="m226 104-30 14a76 76 0 0 1-66 45l5 18-22-22 22-22-4 15a61 61 0 0 0 51-42l22-11-8-15Z"/>
+  <path fill="#128329" d="m218 78-17 7a75 75 0 0 1-18-35l21-18a93 93 0 0 0 14 46Z"/>
+  <path fill="#0f6d2b" d="M75 185a76 76 0 0 0 67 18l-5 17 22-22-22-22 4 15a61 61 0 0 1-54-15Z"/>
+  <circle cx="116" cy="113" r="58" fill="#fff" stroke="#183c81" stroke-width="12"/>
+  <path fill="none" stroke="#183c81" stroke-linecap="round" stroke-linejoin="round" stroke-width="12" d="m155 154 33 33"/>
+  <path fill="none" stroke="#183c81" stroke-linecap="round" stroke-linejoin="round" stroke-width="9" d="m82 115 17 17 29-34"/>
+  <circle cx="116" cy="83" r="13" fill="none" stroke="#183c81" stroke-width="3"/>
+  <path stroke="#183c81" stroke-width="2" d="M116 70v26M103 83h26M107 74l18 18M125 74l-18 18"/>
+  <path fill="#183c81" d="M130 112c6 3 11 8 13 14l-5 3c-2-5-5-8-10-11Z"/>
+  <path fill="#183c81" d="M134 126c9-5 16 2 15 8-1 6-7 7-11 4 4 0 5-2 4-4-1-2-4-2-7 1Z"/>
+</svg>
