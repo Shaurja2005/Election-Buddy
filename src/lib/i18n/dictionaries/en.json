@@ -339,6 +339,11 @@
   "ins.dont3": "Do not accept anything offered in exchange for your vote.",
   "ins.do": "Do",
   "ins.dont": "Do not",
+  "landing.eyebrow": "For every first-time voter in India",
+  "landing.enter": "Enter dashboard",
+  "landing.simulate": "Try the EVM simulator",
+  "landing.pauseVideo": "Pause background video",
+  "landing.playVideo": "Play background video",
 
   "common.close": "Close",
   "common.back": "Back",

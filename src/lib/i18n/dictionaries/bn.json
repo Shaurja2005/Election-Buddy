@@ -339,6 +339,11 @@
   "ins.dont3": "ভোটের বিনিময়ে কিছু গ্রহণ করবেন না।",
   "ins.do": "করুন",
   "ins.dont": "করবেন না",
+  "landing.eyebrow": "ভারতের প্রতিটি নতুন ভোটারের জন্য",
+  "landing.enter": "ড্যাশবোর্ড খুলুন",
+  "landing.simulate": "ইভিএম সিমুলেটর দেখুন",
+  "landing.pauseVideo": "পটভূমির ভিডিও থামান",
+  "landing.playVideo": "পটভূমির ভিডিও চালান",
 
   "common.close": "বন্ধ করুন",
   "common.back": "পিছনে",

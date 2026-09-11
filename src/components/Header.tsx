@@ -15,7 +15,7 @@ export default function Header() {
   const pathname = usePathname();
 
   // The dashboard has its own topbar; stacking both wastes the viewport.
-  if (pathname.startsWith("/dashboard")) return null;
+  if (pathname === "/" || pathname.startsWith("/dashboard")) return null;
 
   return (
     <header className="sticky top-0 z-50 bg-base-100/80 backdrop-blur-md border-b border-base-200 transition-colors duration-300">

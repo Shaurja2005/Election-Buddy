@@ -1,60 +1,143 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import { ArrowRight, Pause, Play } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
+
+const POINTS = ["register", "booth", "neutral"] as const;
 
 export default function LandingPage() {
   const { t } = useLanguage();
-  // The hero keeps one key so word order survives translation; [[…]] marks the
-  // accented half, which lands in a different position per language.
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [playing, setPlaying] = useState(true);
+
+  // [[…]] marks the accented half, which lands in a different position per language.
   const [heroLead, heroAccent = ""] = t("landing.hero").split(/\[\[|\]\]/).filter(Boolean);
 
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      videoRef.current?.pause();
+      setPlaying(false);
+    }
+  }, []);
+
+  const toggleVideo = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    if (v.paused) {
+      void v.play();
+      setPlaying(true);
+    } else {
+      v.pause();
+      setPlaying(false);
+    }
+  };
+
   return (
-    <main className="flex-1 flex flex-col items-center justify-center max-w-4xl mx-auto w-full px-4 py-12 gap-8 text-center min-h-[calc(100vh-3.5rem)]">
-      {/* ── Hero ── */}
-      <section className="space-y-6 max-w-3xl animate-in fade-in slide-in-from-bottom-4 duration-700">
-        <div className="inline-flex items-center gap-1.5 bg-primary/15 text-primary-foreground rounded-full px-4 py-1.5 text-sm font-medium shadow-sm">
-          <span>🏛️</span>
-          <span className="text-base-content/80">{t("landing.badge")}</span>
-        </div>
+    <main className="relative isolate flex h-[100svh] min-h-[36rem] w-full flex-col overflow-hidden bg-[#f4efe6] text-[#0b1f3f]">
+      <video
+        ref={videoRef}
+        className="absolute inset-0 -z-20 h-full w-full object-cover"
+        src="/videos/hero.mp4"
+        poster="/videos/hero-poster.jpg"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        aria-hidden="true"
+      />
+      {/* Veil on the reading side only, so the flag and chakra stay whole on the other. */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 -z-10 from-[#f7f3ec]/90 via-[#f7f3ec]/55 to-transparent ltr:bg-gradient-to-r rtl:bg-gradient-to-l"
+      />
 
-        <h2 className="text-5xl md:text-6xl font-extrabold text-base-content leading-tight tracking-tight">
-          {heroLead}{" "}
-          <span className="text-primary drop-shadow-sm">{heroAccent}</span>
-        </h2>
+      <header className="flex items-center justify-between gap-4 px-5 pt-5 sm:px-10 sm:pt-7">
+        <Link href="/" className="flex items-center gap-2.5" aria-label={t("brand.home")}>
+          <Image
+            src="/logo.png"
+            alt=""
+            width={36}
+            height={36}
+            className="h-9 w-9 rounded-full object-cover ring-1 ring-[#0b1f3f]/15"
+          />
+          <span className="leading-tight">
+            <span className="block text-sm font-bold">{t("brand.name")}</span>
+            <span className="block text-[11px] text-[#0b1f3f]/65">{t("brand.tagline")}</span>
+          </span>
+        </Link>
 
-        <p className="text-lg md:text-xl text-base-content/70 max-w-2xl mx-auto leading-relaxed">
-          {t("landing.subhead")}
-        </p>
-
-        <div className="pt-6">
-          <Link 
-            href="/chat" 
-            className="btn btn-primary btn-lg rounded-full px-8 text-lg font-bold shadow-lg shadow-primary/30 hover:scale-105 transition-transform"
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={toggleVideo}
+            aria-label={playing ? t("landing.pauseVideo") : t("landing.playVideo")}
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-white/70 text-[#0b1f3f] ring-1 ring-[#0b1f3f]/15 backdrop-blur-md transition hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0b1f3f]"
           >
-            {t("landing.cta")} 🚀
-          </Link>
+            {playing ? <Pause size={15} aria-hidden="true" /> : <Play size={15} aria-hidden="true" />}
+          </button>
+          <div className="dark rounded-full bg-[#0b1f3f] text-white shadow-lg shadow-[#0b1f3f]/20">
+            <LanguageSwitcher />
+          </div>
+        </div>
+      </header>
+
+      <section className="flex flex-1 flex-col justify-center px-5 sm:px-10 lg:px-16">
+        <div className="max-w-2xl">
+          <p className="animate-in fade-in slide-in-from-bottom-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#0b1f3f]/70 duration-700 fill-mode-both motion-reduce:animate-none sm:text-sm">
+            {t("landing.eyebrow")}
+          </p>
+
+          <h1 className="mt-5 animate-in fade-in slide-in-from-bottom-4 text-[clamp(2.75rem,8vw,6.5rem)] font-extrabold leading-[1.02] tracking-tight delay-150 duration-700 fill-mode-both motion-reduce:animate-none [html:not([data-font=latin])_&]:leading-[1.3] [html:not([data-font=latin])_&]:tracking-normal">
+            {heroLead}{" "}
+            <span className="text-[#1f3a93]">{heroAccent}</span>
+          </h1>
+
+          <p className="mt-6 max-w-xl animate-in fade-in slide-in-from-bottom-4 text-base leading-relaxed text-[#0b1f3f]/80 delay-300 duration-700 fill-mode-both motion-reduce:animate-none sm:text-lg">
+            {t("landing.subhead")}
+          </p>
+
+          <div className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-4 animate-in fade-in slide-in-from-bottom-4 delay-500 duration-700 fill-mode-both motion-reduce:animate-none">
+            <Link
+              href="/dashboard"
+              className="group inline-flex items-center gap-2.5 rounded-full bg-[#0b1f3f] px-7 py-3.5 text-base font-semibold text-white shadow-xl shadow-[#0b1f3f]/25 transition hover:bg-[#1f3a93] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#0b1f3f]"
+            >
+              {t("landing.enter")}
+              <ArrowRight
+                size={18}
+                aria-hidden="true"
+                className="transition-transform group-hover:translate-x-0.5 rtl:-scale-x-100 rtl:group-hover:-translate-x-0.5"
+              />
+            </Link>
+            <Link
+              href="/dashboard/simulate"
+              className="text-base font-semibold text-[#0b1f3f] underline decoration-[#0b1f3f]/30 decoration-2 underline-offset-[6px] transition hover:decoration-[#0b1f3f]"
+            >
+              {t("landing.simulate")}
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* ── Feature Cards (Optional bottom visuals) ── */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full pt-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200">
-        <div className="card-themed p-6 flex flex-col items-center text-center gap-3 hover:-translate-y-1 transition-transform">
-          <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-2xl">📝</div>
-          <h3 className="font-bold text-base-content">{t("landing.card.register.title")}</h3>
-          <p className="text-sm text-base-content/60">{t("landing.card.register.body")}</p>
-        </div>
-        <div className="card-themed p-6 flex flex-col items-center text-center gap-3 hover:-translate-y-1 transition-transform">
-          <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-2xl">📍</div>
-          <h3 className="font-bold text-base-content">{t("landing.card.booth.title")}</h3>
-          <p className="text-sm text-base-content/60">{t("landing.card.booth.body")}</p>
-        </div>
-        <div className="card-themed p-6 flex flex-col items-center text-center gap-3 hover:-translate-y-1 transition-transform">
-          <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-2xl">⚖️</div>
-          <h3 className="font-bold text-base-content">{t("landing.card.neutral.title")}</h3>
-          <p className="text-sm text-base-content/60">{t("landing.card.neutral.body")}</p>
-        </div>
-      </div>
+      <footer className="px-5 pb-6 sm:px-10 sm:pb-8 lg:px-16">
+        <ul className="grid max-w-4xl animate-in fade-in gap-4 border-t border-[#0b1f3f]/15 pt-5 delay-700 duration-1000 fill-mode-both motion-reduce:animate-none sm:grid-cols-3 sm:gap-8">
+          {POINTS.map((p) => (
+            <li key={p} className="hidden sm:block">
+              <p className="text-sm font-semibold">{t(`landing.card.${p}.title`)}</p>
+              <p className="mt-1 text-[13px] leading-snug text-[#0b1f3f]/70">
+                {t(`landing.card.${p}.body`)}
+              </p>
+            </li>
+          ))}
+          <li className="text-[13px] font-medium text-[#0b1f3f]/75 sm:hidden">
+            {POINTS.map((p) => t(`landing.card.${p}.title`)).join(" · ")}
+          </li>
+        </ul>
+      </footer>
     </main>
   );
 }

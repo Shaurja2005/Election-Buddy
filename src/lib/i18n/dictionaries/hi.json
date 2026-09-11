@@ -339,6 +339,11 @@
   "ins.dont3": "वोट के बदले कुछ भी स्वीकार न करें।",
   "ins.do": "करें",
   "ins.dont": "न करें",
+  "landing.eyebrow": "भारत के हर पहली बार के मतदाता के लिए",
+  "landing.enter": "डैशबोर्ड खोलें",
+  "landing.simulate": "ईवीएम सिम्युलेटर आज़माएँ",
+  "landing.pauseVideo": "पृष्ठभूमि वीडियो रोकें",
+  "landing.playVideo": "पृष्ठभूमि वीडियो चलाएँ",
 
   "common.close": "बंद करें",
   "common.back": "पीछे",
