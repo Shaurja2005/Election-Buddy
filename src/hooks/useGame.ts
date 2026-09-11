@@ -13,9 +13,19 @@ export interface GamePlayer {
 }
 
 const SOUNDS = {
+  /** Paper handled: documents lifted off the desk, a name ticked on the roll. */
   paper: "/game/audio/paper-rustle-sound.mp3",
+  /** Generic advance: a choice made, a line of dialogue stepped through. */
+  click: "/game/audio/sfx_click.mp3",
+  /** Stepping into a building on the street. */
+  building: "/game/audio/building_select_sound.mp3",
+  /** The EVM's confirmation beep — the sound a voter is told to listen for. */
   beep: "/game/audio/evm-beep.mp3",
+  /** The VVPAT printing the slip behind the glass. */
+  print: "/game/audio/sfx_vvpat_print.mp3",
 } as const;
+
+export type GameSound = keyof typeof SOUNDS;
 
 export function useGame() {
   const [stageIndex, setStageIndex] = useState(0);

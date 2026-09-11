@@ -1,5 +1,6 @@
 "use client";
 
+import type { GameSound } from "@/hooks/useGame";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -27,7 +28,7 @@ export default function StageEvm({
   play,
 }: {
   onDone: () => void;
-  play: (s: "paper" | "beep") => void;
+  play: (s: GameSound) => void;
 }) {
   const { t } = useLanguage();
   const [phase, setPhase] = useState<Phase>("room");
@@ -87,7 +88,11 @@ export default function StageEvm({
     setChoice(n);
     const led = hostRef.current?.querySelector(`#led-${n}`);
     led?.setAttribute("fill", "#ef4444");
-    setTimeout(() => setPhase("vvpat"), 1100);
+    // The beep lands first, then the printer runs as the slip slides into view.
+    setTimeout(() => {
+      play("print");
+      setPhase("vvpat");
+    }, 1100);
   };
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -120,7 +125,7 @@ export default function StageEvm({
         <button
           type="button"
           onClick={() => {
-            play("paper");
+            play("click");
             setPhase("ballot");
           }}
           aria-label={t("game.evm.approach")}

@@ -1,5 +1,6 @@
 "use client";
 
+import type { GameSound } from "@/hooks/useGame";
 import { useState } from "react";
 import Image from "next/image";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -30,7 +31,7 @@ export default function StageBooth({
   play,
 }: {
   onDone: () => void;
-  play: (s: "paper" | "beep") => void;
+  play: (s: GameSound) => void;
 }) {
   const { t } = useLanguage();
   const { showToast, toastNode } = useToast();
@@ -39,7 +40,7 @@ export default function StageBooth({
 
   const pick = (id: string, correct: boolean) => {
     if (done) return;
-    play("paper");
+    play("building");
     if (!correct) {
       setShaking(id);
       setTimeout(() => setShaking(null), 420);

@@ -1,5 +1,6 @@
 "use client";
 
+import type { GameSound } from "@/hooks/useGame";
 import { useState } from "react";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
@@ -16,14 +17,14 @@ export default function StageOfficer({
   playerName: string;
   gender: "male" | "female";
   onDone: () => void;
-  play: (s: "paper" | "beep") => void;
+  play: (s: GameSound) => void;
 }) {
   const { t } = useLanguage();
   const [line, setLine] = useState(0);
   const isLast = line === OFFICER_LINES.length - 1;
 
   const advance = () => {
-    play("paper");
+    play("click");
     if (isLast) {
       onDone();
       return;

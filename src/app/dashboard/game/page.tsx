@@ -32,7 +32,7 @@ export default function GamePage() {
           <StageState
             onPick={(stateCode, stateName) => {
               game.update({ stateCode, stateName });
-              game.play("paper");
+              game.play("click");
               game.next();
             }}
           />
@@ -45,7 +45,7 @@ export default function GamePage() {
             onChange={game.update}
             onConfirm={(name) => {
               game.update({ name });
-              game.play("paper");
+              game.play("click");
               game.next();
             }}
           />

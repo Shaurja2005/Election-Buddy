@@ -1,5 +1,6 @@
 "use client";
 
+import type { GameSound } from "@/hooks/useGame";
 import { useState } from "react";
 import Image from "next/image";
 import { Check } from "lucide-react";
@@ -12,7 +13,7 @@ export default function StageDocuments({
   play,
 }: {
   onDone: () => void;
-  play: (s: "paper" | "beep") => void;
+  play: (s: GameSound) => void;
 }) {
   const { t } = useLanguage();
   const { showToast, toastNode } = useToast();

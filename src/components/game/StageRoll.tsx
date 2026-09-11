@@ -1,5 +1,6 @@
 "use client";
 
+import type { GameSound } from "@/hooks/useGame";
 import { useMemo, useState } from "react";
 import { Check } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -27,7 +28,7 @@ export default function StageRoll({
   playerName: string;
   stateName: string;
   onDone: () => void;
-  play: (s: "paper" | "beep") => void;
+  play: (s: GameSound) => void;
 }) {
   const { t } = useLanguage();
   const { showToast, toastNode } = useToast();
