@@ -9,11 +9,17 @@ import { SceneBanner } from "./GameShell";
 type Phase = "room" | "ballot" | "vvpat";
 
 /**
- * Row centres in the ballot-unit artwork, as a share of its 500-unit height.
- * The rows sit 70 units apart starting at y=100, so these must stay in step
- * with the SVG rather than being eyeballed.
+ * Geometry read straight out of the ballot-unit artwork. Its name plates are
+ * 100x50 boxes at x=45, the first at y=75, each row 70 units below the last.
  */
-const ROW_TOP_PCT = [20, 34, 48, 62, 76];
+const VIEW_W = 300;
+const VIEW_H = 500;
+const PLATE_X = 47;
+const PLATE_W = 96;
+const PLATE_H = 46;
+const PLATE_TOP = 77;
+const ROW_GAP = 70;
+const NOTA_ROW = 5;
 const VVPAT_SECONDS = 7;
 
 export default function StageEvm({
@@ -44,8 +50,17 @@ export default function StageEvm({
         const svg = host.querySelector("svg");
         svg?.setAttribute("class", "h-full w-full");
         svg?.setAttribute("role", "presentation");
+        // The artwork's buttons become the real controls — focusable and
+        // labelled — instead of parking invisible HTML buttons on top of them.
         host.querySelectorAll('[id^="btn-"]').forEach((el) => {
+          const n = Number(el.id.split("-")[1]);
           el.setAttribute("class", "game-evm-btn");
+          el.setAttribute("role", "button");
+          el.setAttribute("tabindex", "0");
+          el.setAttribute(
+            "aria-label",
+            n === NOTA_ROW ? t("game.evm.nota") : t("game.evm.voteFor", { n: String(n) })
+          );
         });
       })
       .catch(() => {});
@@ -53,7 +68,7 @@ export default function StageEvm({
     return () => {
       cancelled = true;
     };
-  }, [phase]);
+  }, [phase, t]);
 
   // The slip is visible for the full statutory seven seconds, counted down.
   useEffect(() => {
@@ -78,6 +93,14 @@ export default function StageEvm({
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const btn = (e.target as Element).closest<SVGElement>('[id^="btn-"]');
     if (!btn) return;
+    vote(Number(btn.id.split("-")[1]));
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    const btn = (e.target as Element).closest<SVGElement>('[id^="btn-"]');
+    if (!btn) return;
+    e.preventDefault();
     vote(Number(btn.id.split("-")[1]));
   };
 
@@ -121,46 +144,47 @@ export default function StageEvm({
       </SceneBanner>
 
       <div className="absolute inset-0 flex items-center justify-center gap-3 p-3 pt-16 sm:gap-6 sm:pt-14">
-        {/* Ballot unit with the candidate strip laid over the artwork. */}
+        {/* Ballot unit. The candidate plates are drawn in a second SVG that
+            repeats the artwork's viewBox, so both letterbox identically and the
+            plates cannot drift out of their rows the way percentages did. */}
         <div className="relative h-full max-h-full w-[46%] max-w-[15rem]">
-          <div ref={hostRef} onClick={handleClick} className="h-full w-full" />
+          <div
+            ref={hostRef}
+            onClick={handleClick}
+            onKeyDown={handleKeyDown}
+            className="h-full w-full"
+          />
 
-          {GAME_CANDIDATES.map((c, i) => (
-            c.symbol !== "nota" && (
-              <span
-                key={c.id}
-                // Sits exactly over the blank name plate the artwork leaves for it.
-                className="pointer-events-none absolute flex h-[9%] w-[33%] -translate-y-1/2 items-center gap-1 rounded-[3px] bg-[#F1F5F9] px-1"
-                style={{ top: `${ROW_TOP_PCT[i]}%`, insetInlineStart: "15%" }}
-              >
-                <span className="text-sm leading-none sm:text-lg" aria-hidden="true">
-                  {c.symbol}
-                </span>
-                {/* Serial number only: a real ballot plate is symbol-led, and the
-                    full name is on the control that screen readers reach. */}
-                <span className="text-[9px] font-bold text-[#1E293B] sm:text-xs">{c.id}</span>
-              </span>
-            )
-          ))}
-
-          {/* Keyboard route: the SVG buttons are shapes, not controls. */}
-          <div className="absolute inset-y-0 end-0 flex w-[30%] flex-col justify-center">
-            {GAME_CANDIDATES.map((c, i) => (
-              <button
-                key={c.id}
-                type="button"
-                onClick={() => vote(c.id)}
-                disabled={choice !== null}
-                aria-label={
-                  c.symbol === "nota"
-                    ? t("game.evm.nota")
-                    : t("game.evm.voteFor", { n: String(c.id) })
-                }
-                className="absolute h-[9%] w-full -translate-y-1/2 rounded-full opacity-0 focus-visible:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
-                style={{ top: `${ROW_TOP_PCT[i]}%` }}
-              />
-            ))}
-          </div>
+          <svg
+            viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
+            preserveAspectRatio="xMidYMid meet"
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 h-full w-full"
+          >
+            {GAME_CANDIDATES.filter((c) => c.symbol !== "nota").map((c, i) => {
+              const top = PLATE_TOP + i * ROW_GAP;
+              const mid = top + PLATE_H / 2;
+              return (
+                <g key={c.id}>
+                  {/* Covers the blank swatch and rule the artwork leaves behind. */}
+                  <rect x={PLATE_X} y={top} width={PLATE_W} height={PLATE_H} rx="4" fill="#F1F5F9" />
+                  <text x={PLATE_X + 22} y={mid} fontSize="30" textAnchor="middle" dominantBaseline="central">
+                    {c.symbol}
+                  </text>
+                  <text
+                    x={PLATE_X + 52}
+                    y={mid}
+                    fontSize="24"
+                    fontWeight="bold"
+                    fill="#1E293B"
+                    dominantBaseline="central"
+                  >
+                    {c.id}
+                  </text>
+                </g>
+              );
+            })}
+          </svg>
         </div>
 
         {/* VVPAT window */}
@@ -169,7 +193,7 @@ export default function StageEvm({
             <p className="mb-1.5 text-center text-[9px] font-bold uppercase tracking-wide text-white/70 sm:text-[11px]">
               {t("game.evm.vvpat")}
             </p>
-            <div className="flex min-h-[7rem] items-center justify-center overflow-hidden rounded-md bg-[#0b0f14] p-2">
+            <div className="flex min-h-[4.5rem] items-center justify-center overflow-hidden rounded-md bg-[#0b0f14] p-1.5 sm:min-h-[7rem] sm:p-2">
               {phase === "vvpat" && choice !== null ? (
                 <div className="w-full animate-in slide-in-from-top-6 rounded-sm bg-[#fdf8ec] p-2 text-center shadow-lg duration-700 motion-reduce:animate-none">
                   <p className="text-[8px] font-bold uppercase tracking-wide text-[#0b1f3f]/60">
