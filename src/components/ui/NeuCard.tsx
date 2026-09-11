@@ -10,6 +10,8 @@ const ELEVATION: Record<Elevation, string> = {
 
 interface NeuCardProps extends HTMLAttributes<HTMLElement> {
   as?: ElementType;
+  /** Set when rendering as a link (e.g. next/link). */
+  href?: string;
   elevation?: Elevation;
   /** Adds a lift on hover. Only for cards that actually do something when clicked. */
   interactive?: boolean;

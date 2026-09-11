@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
@@ -9,6 +10,11 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 export default function Header() {
   const { user, loading, signInWithGoogle, logout } = useAuth();
   const { t } = useLanguage();
+  const pathname = usePathname();
+
+  // The dashboard has its own topbar; stacking both wastes the viewport.
+  if (pathname.startsWith("/dashboard")) return null;
+
   return (
     <header className="sticky top-0 z-50 bg-base-100/80 backdrop-blur-md border-b border-base-200 transition-colors duration-300">
       <div className="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">

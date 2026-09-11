@@ -1,6 +1,6 @@
 "use client";
 
-import type { ButtonHTMLAttributes, ReactNode } from "react";
+import type { ButtonHTMLAttributes, ElementType, ReactNode } from "react";
 
 type Variant = "default" | "primary" | "ghost";
 type Size = "sm" | "md" | "lg";
@@ -23,6 +23,9 @@ const SIZE: Record<Size, string> = {
 };
 
 interface NeuButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  /** Render as a link (e.g. next/link) when the action navigates. */
+  as?: ElementType;
+  href?: string;
   variant?: Variant;
   size?: Size;
   /** Rendered before the label; pass a lucide icon, never an emoji. */
@@ -31,6 +34,7 @@ interface NeuButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export default function NeuButton({
+  as: Tag = "button",
   variant = "default",
   size = "md",
   icon,
@@ -39,9 +43,10 @@ export default function NeuButton({
   type = "button",
   ...rest
 }: NeuButtonProps) {
+  const isButton = Tag === "button";
   return (
-    <button
-      type={type}
+    <Tag
+      type={isButton ? type : undefined}
       className={[
         "inline-flex items-center justify-center font-medium",
         "transition-shadow duration-150 motion-reduce:transition-none",
@@ -56,6 +61,6 @@ export default function NeuButton({
     >
       {icon}
       {children}
-    </button>
+    </Tag>
   );
 }
