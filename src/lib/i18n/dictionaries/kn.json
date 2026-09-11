@@ -115,6 +115,13 @@
   "error.locationUnavailable": "ನಿಮ್ಮ ಸ್ಥಳವನ್ನು ಗುರುತಿಸಲಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ವಿಳಾಸ ನಮೂದಿಸಿ.",
   "error.geoUnsupported": "ನಿಮ್ಮ ಬ್ರೌಸರ್ ಸ್ಥಳ ಗುರುತಿಸುವಿಕೆಯನ್ನು ಬೆಂಬಲಿಸುವುದಿಲ್ಲ. ದಯವಿಟ್ಟು ವಿಳಾಸ ನಮೂದಿಸಿ.",
   "error.geoReverse": "ನಿಮ್ಮ ಸ್ಥಳದಿಂದ ವಿಳಾಸವನ್ನು ರಚಿಸಲಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಅದನ್ನು ನೀವೇ ನಮೂದಿಸಿ.",
+  "steps.title": "ಹಂತ ಹಂತದ ಮಾರ್ಗದರ್ಶಿ",
+  "links.item.registration.title": "ಮತದಾರರ ನೋಂದಣಿ",
+  "links.item.registration.description": "ಮತದಾರರಾಗಿ ನೋಂದಾಯಿಸಿ ಅಥವಾ ನಿಮ್ಮ ಸ್ಥಿತಿಯನ್ನು ಪರಿಶೀಲಿಸಿ",
+  "links.item.absentee.title": "ಅಂಚೆ ಮತಪತ್ರ",
+  "links.item.absentee.description": "ಮತಗಟ್ಟೆಗೆ ಹೋಗದೆ ಮತ ಚಲಾಯಿಸುವ ವಿಧಾನ ತಿಳಿಯಿರಿ",
+  "links.item.ballot.title": "ಮಾದರಿ ಮತಪತ್ರ",
+  "links.item.ballot.description": "ನಿಮಗೆ ಕಾಣುವ ಮತಪತ್ರವನ್ನು ಮೊದಲೇ ನೋಡಿ",
 
   "common.close": "ಮುಚ್ಚಿ",
   "common.back": "ಹಿಂದೆ",

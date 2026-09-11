@@ -79,7 +79,7 @@ export default function ChatInterface({ address, messages, onAddMessage }: ChatI
       const assistantMessage: ChatMessage = {
         id: crypto.randomUUID(),
         role: "assistant",
-        content: data.reply || data.error || t("chat.noResponse"),
+        content: data.reply || (data.errorKey ? t(data.errorKey) : t("chat.noResponse")),
         timestamp: new Date(),
         responseType: data.responseType ?? "text",
         structuredData: data.structuredData,

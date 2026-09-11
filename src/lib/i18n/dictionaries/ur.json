@@ -115,6 +115,13 @@
   "error.locationUnavailable": "آپ کا مقام معلوم نہ ہو سکا۔ براہ کرم اپنا پتہ درج کریں۔",
   "error.geoUnsupported": "آپ کا براؤزر مقام کی شناخت کی حمایت نہیں کرتا۔ براہ کرم اپنا پتہ درج کریں۔",
   "error.geoReverse": "آپ کے مقام سے پتہ نہیں بنایا جا سکا۔ براہ کرم اسے خود درج کریں۔",
+  "steps.title": "مرحلہ وار رہنمائی",
+  "links.item.registration.title": "ووٹر اندراج",
+  "links.item.registration.description": "ووٹر کے طور پر اندراج کریں یا اپنی حیثیت جانچیں",
+  "links.item.absentee.title": "ڈاک بیلٹ",
+  "links.item.absentee.description": "پولنگ بوتھ گئے بغیر ووٹ ڈالنے کا طریقہ جانیں",
+  "links.item.ballot.title": "نمونہ بیلٹ",
+  "links.item.ballot.description": "آپ کو جو بیلٹ نظر آئے گا، اسے پہلے دیکھیں",
 
   "common.close": "بند کریں",
   "common.back": "واپس",

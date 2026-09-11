@@ -115,6 +115,13 @@
   "error.locationUnavailable": "आपका स्थान पता नहीं चल सका। कृपया अपना पता दर्ज करें।",
   "error.geoUnsupported": "आपका ब्राउज़र स्थान पहचान का समर्थन नहीं करता। कृपया अपना पता दर्ज करें।",
   "error.geoReverse": "आपके स्थान से पता नहीं बनाया जा सका। कृपया इसे स्वयं दर्ज करें।",
+  "steps.title": "चरण-दर-चरण मार्गदर्शिका",
+  "links.item.registration.title": "मतदाता पंजीकरण",
+  "links.item.registration.description": "मतदाता के रूप में पंजीकरण करें या अपनी स्थिति जाँचें",
+  "links.item.absentee.title": "डाक मतपत्र",
+  "links.item.absentee.description": "मतदान केंद्र गए बिना वोट डालने का तरीका जानें",
+  "links.item.ballot.title": "नमूना मतपत्र",
+  "links.item.ballot.description": "आपको जो मतपत्र दिखेगा, उसे पहले देखें",
 
   "common.close": "बंद करें",
   "common.back": "पीछे",

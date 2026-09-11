@@ -115,6 +115,13 @@
   "error.locationUnavailable": "Could not determine your location. Enter your address instead.",
   "error.geoUnsupported": "Your browser does not support location detection. Enter your address instead.",
   "error.geoReverse": "Could not turn your location into an address. Enter it manually instead.",
+  "steps.title": "Step-by-Step Guide",
+  "links.item.registration.title": "Voter Registration",
+  "links.item.registration.description": "Register to vote or check your registration status",
+  "links.item.absentee.title": "Postal / Absentee Ballot",
+  "links.item.absentee.description": "Find out how to vote without going to the booth",
+  "links.item.ballot.title": "Sample Ballot",
+  "links.item.ballot.description": "Preview the ballot you will see",
 
   "common.close": "Close",
   "common.back": "Back",

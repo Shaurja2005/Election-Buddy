@@ -1,11 +1,13 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenerativeAI, SchemaType, type ResponseSchema } from "@google/generative-ai";
 import { NextRequest, NextResponse } from "next/server";
+import { DEFAULT_LOCALE, LOCALES, isLocale, type Locale } from "@/lib/i18n/locales";
 import type {
   ChatApiRequest,
   ChatApiResponse,
   CivicElectionInfo,
   StructuredData,
   ElectionLink,
+  ElectionStep,
   PollingLocation,
   ResponseType,
 } from "@/types";
@@ -115,11 +117,23 @@ async function fetchCivicData(address: string): Promise<CivicElectionInfo> {
 
 // ─── Prompt Construction ──────────────────────────────────────────────────────
 
-function buildSystemPrompt(civicData: CivicElectionInfo, address: string): string {
+function buildSystemPrompt(
+  civicData: CivicElectionInfo,
+  address: string,
+  locale: Locale
+): string {
+  const language = LOCALES[locale];
+
   const lines: string[] = [
     "You are 'Ballot Buddy', a friendly, neutral, and knowledgeable AI election assistant.",
-    "You help voters around the world — including India, the United States, and other democracies — understand election processes, timelines, results, and how to participate.",
+    "You help voters — especially first-time voters in India — understand election processes, timelines, and how to participate.",
     "Always be encouraging, non-partisan, and accurate. Use your training knowledge for general election facts.",
+    "",
+    `LANGUAGE: Write every word of 'reply' and every step in ${language.name} (${language.native}), using its native script.`,
+    "This is not optional. Do not answer in English unless English is the language named above.",
+    "Translate the substance rather than transliterating English sentences.",
+    "Keep official URLs exactly as given, and write well-known terms (EPIC, EVM, VVPAT, NOTA, Lok Sabha, Vidhan Sabha)",
+    `in their standard ${language.name} form, adding the English abbreviation in brackets on first use when that is clearer.`,
     "",
     `The user's location/address context: ${address || "not provided"}`,
     "",
@@ -169,103 +183,142 @@ function buildSystemPrompt(civicData: CivicElectionInfo, address: string): strin
 
   lines.push(
     "IMPORTANT INSTRUCTIONS:",
-    "- Answer questions about any country's elections — India (including state elections like West Bengal, Tamil Nadu, etc.), USA, UK, and others.",
-    "- For Indian elections, use your knowledge of the Election Commission of India (ECI), Vidhan Sabha, Lok Sabha, state assembly results, etc.",
-    "- For election results questions, share what you know from your training data and note that for real-time results the user should check the official Election Commission website.",
-    "- When explaining a process (like registration or voting), present it as clear numbered steps.",
-    "- When sharing URLs, present them clearly labeled.",
-    "- Keep answers concise, friendly, and easy to understand.",
-    "- If you lack specific data, say so honestly and direct users to official sources (eci.gov.in for India, vote.gov for USA).",
+    "- Default to Indian elections: the Election Commission of India (ECI), Lok Sabha, Vidhan Sabha, EPIC cards, Form 6, EVMs and VVPAT.",
+    "- Answer about other countries' elections when the user clearly asks about them.",
+    "- Assume the reader may be voting for the first time. Explain jargon the first time it appears.",
+    "- For election results, share what you know and note that live results are on the official ECI website.",
+    "- If you lack specific data, say so honestly and direct users to official sources (eci.gov.in or voters.eci.gov.in for India, vote.gov for the USA).",
     "- Never recommend a candidate or party. Always remain strictly non-partisan.",
-    "- Structure your response clearly with short paragraphs.",
-    "- For real-time information (live results, today's news), clarify that your knowledge has a training cutoff and direct them to official sources."
+    "- Keep answers concise, friendly, and easy to understand, in short paragraphs.",
+    "",
+    "OUTPUT FORMAT — you must return JSON matching the provided schema:",
+    "- 'reply': the full answer as markdown. This is what the user reads.",
+    "- 'responseType': 'steps' when the answer is a process the user follows in order;",
+    "  'location' when it is mainly about where to vote; 'links' when it mainly points to official pages;",
+    "  otherwise 'text'.",
+    "- 'steps': fill this ONLY when responseType is 'steps'. One entry per step, in order, each with a short",
+    "  title and a fuller description. Leave it empty otherwise.",
+    "- Never describe the JSON structure inside 'reply'."
   );
 
   return lines.join("\n");
 }
 
-// ─── Parse AI Response for Structure ─────────────────────────────────────────
+// Gemini returns the shape explicitly, so structure no longer depends on
+// pattern-matching English words in the reply.
+const RESPONSE_SCHEMA: ResponseSchema = {
+  type: SchemaType.OBJECT,
+  properties: {
+    reply: {
+      type: SchemaType.STRING,
+      description: "The full answer in markdown, in the requested language.",
+    },
+    responseType: {
+      type: SchemaType.STRING,
+      format: "enum",
+      enum: ["text", "steps", "links", "location"],
+    },
+    steps: {
+      type: SchemaType.ARRAY,
+      description: "Ordered steps; only when responseType is 'steps'.",
+      items: {
+        type: SchemaType.OBJECT,
+        properties: {
+          title: { type: SchemaType.STRING },
+          description: { type: SchemaType.STRING },
+        },
+        required: ["title", "description"],
+      },
+    },
+  },
+  required: ["reply", "responseType"],
+};
 
-function parseResponseType(text: string, civicData: CivicElectionInfo): {
+interface ModelReply {
+  reply: string;
   responseType: ResponseType;
-  structuredData?: StructuredData;
+  steps?: { title: string; description: string }[];
+}
+
+function parseModelReply(raw: string): ModelReply {
+  try {
+    const parsed = JSON.parse(raw) as Partial<ModelReply>;
+    if (typeof parsed.reply === "string" && parsed.reply.trim()) {
+      return {
+        reply: parsed.reply,
+        responseType: parsed.responseType ?? "text",
+        steps: parsed.steps,
+      };
+    }
+  } catch {
+    // Model ignored the schema; the raw text is still a usable answer.
+  }
+  return { reply: raw, responseType: "text" };
+}
+
+// ─── Structured Data from Civic API ──────────────────────────────────────────
+// Links and polling locations come from the Civic API, never from the reply
+// text, so they stay correct in every language.
+
+function buildStructuredData(civicData: CivicElectionInfo): {
+  links: ElectionLink[];
+  pollingLocations: PollingLocation[];
 } {
-  const lower = text.toLowerCase();
-  const hasSteps =
-    /step\s+\d|^\d+\.\s/m.test(text) ||
-    lower.includes("first,") ||
-    lower.includes("next,") ||
-    lower.includes("finally,");
-
-  const hasLinks =
-    civicData.registrationUrl ||
-    civicData.absenteeBallotUrl ||
-    civicData.ballotInfoUrl;
-
-  const hasPolling =
-    civicData.pollingLocations && civicData.pollingLocations.length > 0;
-
   const links: ElectionLink[] = [];
+
   if (civicData.registrationUrl) {
     links.push({
-      title: "Voter Registration",
+      titleKey: 'links.item.registration.title',
+      descriptionKey: 'links.item.registration.description',
       url: civicData.registrationUrl,
-      description: "Register to vote or check your registration status",
-      type: "registration",
+      type: 'registration',
     });
   }
   if (civicData.absenteeBallotUrl) {
     links.push({
-      title: "Absentee Ballot Info",
+      titleKey: 'links.item.absentee.title',
+      descriptionKey: 'links.item.absentee.description',
       url: civicData.absenteeBallotUrl,
-      description: "Request an absentee or mail-in ballot",
-      type: "ballot",
+      type: 'ballot',
     });
   }
   if (civicData.ballotInfoUrl) {
     links.push({
-      title: "Sample Ballot",
+      titleKey: 'links.item.ballot.title',
+      descriptionKey: 'links.item.ballot.description',
       url: civicData.ballotInfoUrl,
-      description: "Preview your sample ballot",
-      type: "ballot",
+      type: 'ballot',
     });
   }
 
+  const pollingLocations: PollingLocation[] = (civicData.pollingLocations ?? []).map(
+    (loc) => ({
+      name: loc.address.locationName || '',
+      address: [loc.address.line1, loc.address.city, loc.address.state, loc.address.zip]
+        .filter(Boolean)
+        .join(", "),
+      hours: loc.pollingHours,
+      notes: loc.notes,
+    })
+  );
 
-  const pollingLocations: PollingLocation[] = (
-    civicData.pollingLocations ?? []
-  ).map((loc) => ({
-    name: loc.address.locationName || "Polling Place",
-    address: `${loc.address.line1}, ${loc.address.city}, ${loc.address.state} ${loc.address.zip}`,
-    hours: loc.pollingHours,
-    notes: loc.notes,
-  }));
+  return { links, pollingLocations };
+}
 
-  if (hasPolling && lower.includes("poll")) {
-    return {
-      responseType: "location",
-      structuredData: { pollingLocations, links },
-    };
+// The model picks the shape, but a shape with nothing to show is worse than
+// plain text, so downgrade when the supporting data is absent.
+function resolveResponseType(
+  requested: ResponseType,
+  links: ElectionLink[],
+  pollingLocations: PollingLocation[],
+  steps: ElectionStep[]
+): ResponseType {
+  if (requested === 'location' && pollingLocations.length === 0) {
+    return links.length > 0 ? 'links' : 'text';
   }
-
-  if (hasLinks && (lower.includes("register") || lower.includes("url") || lower.includes("link") || lower.includes("website"))) {
-    return {
-      responseType: "links",
-      structuredData: { links, pollingLocations },
-    };
-  }
-
-  if (hasSteps) {
-    return {
-      responseType: "steps",
-      structuredData: { links, pollingLocations },
-    };
-  }
-
-  return {
-    responseType: "text",
-    structuredData: links.length > 0 ? { links } : undefined,
-  };
+  if (requested === 'links' && links.length === 0) return 'text';
+  if (requested === 'steps' && steps.length === 0) return 'text';
+  return requested;
 }
 
 // ─── API Route Handler ────────────────────────────────────────────────────────
@@ -274,40 +327,41 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     const body: ChatApiRequest = await req.json();
     const { message, address, history } = body;
+    const locale: Locale = isLocale(body.locale) ? body.locale : DEFAULT_LOCALE;
 
     if (!message?.trim()) {
       return NextResponse.json(
-        { error: "Message is required." } as ChatApiResponse,
+        { error: "Message is required.", errorKey: "error.emptyMessage" } as ChatApiResponse,
         { status: 400 }
       );
     }
 
     const geminiKey = process.env.GEMINI_API_KEY;
     if (!geminiKey || geminiKey === "your_gemini_api_key_here") {
+      console.error("GEMINI_API_KEY is not configured.");
       return NextResponse.json(
         {
           error: "GEMINI_API_KEY is not configured.",
-          reply: "⚠️ The Gemini API key has not been set up yet. Please open the `.env.local` file in the project root and replace `your_gemini_api_key_here` with your actual key from https://aistudio.google.com/app/apikey — then restart the dev server.",
+          errorKey: "error.apiKeyMissing",
           responseType: "text",
         } as ChatApiResponse,
         { status: 503 }
       );
     }
 
-    // 1. Fetch civic data in parallel with no blocking
     const civicData = await fetchCivicData(address || "");
+    const systemPrompt = buildSystemPrompt(civicData, address || "", locale);
 
-    // 2. Construct system prompt
-    const systemPrompt = buildSystemPrompt(civicData, address || "unknown address");
-
-    // 3. Initialize Gemini
     const genAI = new GoogleGenerativeAI(geminiKey);
     const model = genAI.getGenerativeModel({
       model: "gemini-2.5-flash",
       systemInstruction: systemPrompt,
+      generationConfig: {
+        responseMimeType: "application/json",
+        responseSchema: RESPONSE_SCHEMA,
+      },
     });
 
-    // 4. Build chat history
     const chatHistory = (history ?? [])
       .filter((m) => m.content?.trim())
       .map((m) => ({
@@ -315,46 +369,59 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         parts: [{ text: m.content }],
       }));
 
-    // 5. Send message
     const chat = model.startChat({ history: chatHistory });
     const result = await chat.sendMessage(message);
-    const replyText = result.response.text();
+    const parsed = parseModelReply(result.response.text());
 
-    // 6. Parse response for UI hints
-    const { responseType, structuredData } = parseResponseType(replyText, civicData);
+    const { links, pollingLocations } = buildStructuredData(civicData);
+    const steps: ElectionStep[] = (parsed.steps ?? []).map((s, idx) => ({
+      title: s.title,
+      description: s.description,
+      status: idx === 0 ? "active" : "upcoming",
+    }));
 
-    const response: ChatApiResponse = {
-      reply: replyText,
+    const responseType = resolveResponseType(
+      parsed.responseType,
+      links,
+      pollingLocations,
+      steps
+    );
+
+    const structuredData: StructuredData | undefined =
+      steps.length || links.length || pollingLocations.length
+        ? {
+            ...(steps.length ? { steps } : {}),
+            ...(links.length ? { links } : {}),
+            ...(pollingLocations.length ? { pollingLocations } : {}),
+          }
+        : undefined;
+
+    return NextResponse.json({
+      reply: parsed.reply,
       responseType,
       structuredData,
       civicData,
-    };
-
-    return NextResponse.json(response);
+    } satisfies ChatApiResponse);
   } catch (error) {
     console.error("Chat API error:", error);
     const rawMessage = error instanceof Error ? error.message : "An unexpected error occurred.";
 
-    // Provide user-friendly messages for common API key errors
-    let userFriendlyReply = "I'm sorry, something went wrong on my end. Please try again in a moment.";
-
+    // The client owns display copy, so send a key rather than English prose.
+    let errorKey = "error.generic";
     if (rawMessage.includes("API key not valid") || rawMessage.includes("API_KEY_INVALID")) {
-      userFriendlyReply =
-        "⚠️ **Invalid API Key**: The Gemini API key in `.env.local` is not valid. Please:\n\n" +
-        "1. Go to https://aistudio.google.com/app/apikey\n" +
-        "2. Create or copy a valid API key\n" +
-        "3. Paste it as `GEMINI_API_KEY=...` in your `.env.local` file\n" +
-        "4. Restart the dev server (`npm run dev`)";
+      errorKey = "error.apiKeyInvalid";
     } else if (rawMessage.includes("quota") || rawMessage.includes("RESOURCE_EXHAUSTED")) {
-      userFriendlyReply =
-        "⚠️ **API Quota Exceeded**: Your Gemini API quota has been reached. Please wait a moment or check your usage at https://aistudio.google.com";
-    } else if (rawMessage.includes("fetch") || rawMessage.includes("network") || rawMessage.includes("ECONNREFUSED")) {
-      userFriendlyReply =
-        "⚠️ **Network Error**: Could not reach the AI service. Please check your internet connection and try again.";
+      errorKey = "error.quota";
+    } else if (
+      rawMessage.includes("fetch") ||
+      rawMessage.includes("network") ||
+      rawMessage.includes("ECONNREFUSED")
+    ) {
+      errorKey = "error.network";
     }
 
     return NextResponse.json(
-      { error: rawMessage, reply: userFriendlyReply, responseType: "text" } as ChatApiResponse,
+      { error: rawMessage, errorKey, responseType: "text" } as ChatApiResponse,
       { status: 500 }
     );
   }

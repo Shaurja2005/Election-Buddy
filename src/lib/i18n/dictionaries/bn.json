@@ -115,6 +115,13 @@
   "error.locationUnavailable": "আপনার অবস্থান জানা যায়নি। অনুগ্রহ করে ঠিকানা লিখুন।",
   "error.geoUnsupported": "আপনার ব্রাউজার অবস্থান শনাক্তকরণ সমর্থন করে না। অনুগ্রহ করে ঠিকানা লিখুন।",
   "error.geoReverse": "আপনার অবস্থান থেকে ঠিকানা তৈরি করা যায়নি। অনুগ্রহ করে নিজে লিখুন।",
+  "steps.title": "ধাপে ধাপে নির্দেশিকা",
+  "links.item.registration.title": "ভোটার নিবন্ধন",
+  "links.item.registration.description": "ভোটার হিসেবে নিবন্ধন করুন বা আপনার অবস্থা যাচাই করুন",
+  "links.item.absentee.title": "ডাক ব্যালট",
+  "links.item.absentee.description": "ভোটকেন্দ্রে না গিয়ে ভোট দেওয়ার উপায় জানুন",
+  "links.item.ballot.title": "নমুনা ব্যালট",
+  "links.item.ballot.description": "আপনি যে ব্যালট দেখবেন তা আগে দেখে নিন",
 
   "common.close": "বন্ধ করুন",
   "common.back": "পিছনে",

@@ -2,47 +2,45 @@
 
 import type { ElectionStep, StepsRendererProps } from "@/types";
 import ReactMarkdown from "react-markdown";
+import { useLanguage } from "@/contexts/LanguageContext";
 
-// Parse numbered steps from AI response text
+// Fallback only: the model now returns steps as data, but an older stored
+// message — or a reply that ignored the schema — still arrives as prose.
+// Splitting on paragraphs works in any script; matching English words does not.
 function parseSteps(text: string): ElectionStep[] {
-  const steps: ElectionStep[] = [];
-
-  // Match "1. Title\nDescription" or "Step 1: Title"
-  const numbered = text.match(/(?:^|\n)\d+[\.\)]\s+.+/gm);
+  const numbered = text.match(/(?:^|\n)\s*\d+[.)]\s+.+/gm);
   if (numbered && numbered.length > 1) {
-    numbered.forEach((line, idx) => {
-      const clean = line.replace(/^\n/, "").replace(/^\d+[\.\)]\s+/, "").trim();
-      // Remove markdown bolding completely from the title snippet
-      let cleanTitle = clean.replace(/\*\*/g, "");
-      steps.push({
-        title: cleanTitle.length > 60 ? cleanTitle.slice(0, 60) + "…" : cleanTitle,
+    return numbered.map((line, idx) => {
+      const clean = line.trim().replace(/^\d+[.)]\s+/, "").replace(/\*\*/g, "");
+      return {
+        title: clean.length > 60 ? clean.slice(0, 60) + "…" : clean,
         description: clean,
-        status: idx === 0 ? "active" : "upcoming",
-      });
+        status: (idx === 0 ? "active" : "upcoming") as ElectionStep["status"],
+      };
     });
-    return steps;
   }
 
-  // Fall back: split by blank lines and treat each paragraph as a step
   const paragraphs = text
     .split(/\n{2,}/)
     .map((p) => p.trim())
     .filter(Boolean);
   if (paragraphs.length > 1) {
-    return paragraphs.slice(0, 6).map((p, idx) => ({
-      title:
-        p.split("\n")[0].replace(/^#+\s*/, "").slice(0, 60) +
-        (p.split("\n")[0].length > 60 ? "…" : ""),
-      description: p,
-      status: (idx === 0 ? "active" : "upcoming") as ElectionStep["status"],
-    }));
+    return paragraphs.slice(0, 6).map((p, idx) => {
+      const firstLine = p.split("\n")[0].replace(/^#+\s*/, "");
+      return {
+        title: firstLine.length > 60 ? firstLine.slice(0, 60) + "…" : firstLine,
+        description: p,
+        status: (idx === 0 ? "active" : "upcoming") as ElectionStep["status"],
+      };
+    });
   }
 
   return [];
 }
 
-export default function StepsRenderer({ text }: StepsRendererProps) {
-  const steps = parseSteps(text);
+export default function StepsRenderer({ text, steps: providedSteps }: StepsRendererProps) {
+  const { t } = useLanguage();
+  const steps = providedSteps?.length ? providedSteps : parseSteps(text);
 
   if (steps.length === 0) {
     return (
@@ -55,7 +53,7 @@ export default function StepsRenderer({ text }: StepsRendererProps) {
   return (
     <div className="w-full">
       <p className="text-sm opacity-70 mb-4 font-medium uppercase tracking-wide">
-        📋 Step-by-Step Guide
+        📋 {t("steps.title")}
       </p>
       <ul className="steps steps-vertical w-full">
         {steps.map((step, idx) => (
@@ -68,7 +66,7 @@ export default function StepsRenderer({ text }: StepsRendererProps) {
                   : ""
               }`}
           >
-            <div className="text-left pl-3">
+            <div className="text-start ps-3">
               <div className="font-semibold text-base prose prose-sm prose-invert max-w-none">
                 {step.title}
               </div>

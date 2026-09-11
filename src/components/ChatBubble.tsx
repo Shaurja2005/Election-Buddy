@@ -46,7 +46,7 @@ export default function ChatBubble({ message }: ChatBubbleProps) {
     if (responseType === "steps") {
       return (
         <div className="space-y-3">
-          <StepsRenderer text={content} />
+          <StepsRenderer text={content} steps={structuredData?.steps} />
           {structuredData?.links && structuredData.links.length > 0 && (
             <LinksRenderer links={structuredData.links} title={`📎 ${t("links.helpful")}`} />
           )}

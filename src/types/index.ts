@@ -37,10 +37,14 @@ export interface ElectionStep {
 }
 
 export interface ElectionLink {
-  title: string;
   url: string;
-  description?: string;
   type: "registration" | "polling" | "official" | "ballot" | "general";
+  /** Literal label, for links that carry their own name. */
+  title?: string;
+  description?: string;
+  /** Dictionary keys, for links the server builds. Take precedence over the literals. */
+  titleKey?: string;
+  descriptionKey?: string;
 }
 
 export interface PollingLocation {
@@ -89,17 +93,22 @@ export interface ChatApiRequest {
 }
 
 export interface ChatApiResponse {
-  reply: string;
+  reply?: string;
   responseType: ResponseType;
   structuredData?: StructuredData;
   civicData?: CivicElectionInfo;
+  /** Developer-facing detail; never shown to users. */
   error?: string;
+  /** Dictionary key the client translates into the user's language. */
+  errorKey?: string;
 }
 
 // ---------- COMPONENT PROPS ----------
 
 export interface StepsRendererProps {
   text: string;
+  /** Steps returned as data by the model; falls back to parsing `text`. */
+  steps?: ElectionStep[];
 }
 
 export interface PollingLocationsProps {

@@ -46,6 +46,10 @@ export default function LinksRenderer({ links, title }: LinksRendererProps) {
       <div className="grid grid-cols-1 gap-3">
         {links.map((link, idx) => {
           const cfg = TYPE_CONFIG[link.type] ?? TYPE_CONFIG.general;
+          const label = link.titleKey ? t(link.titleKey) : link.title ?? link.url;
+          const description = link.descriptionKey
+            ? t(link.descriptionKey)
+            : link.description;
           return (
             <div
               key={idx}
@@ -56,15 +60,15 @@ export default function LinksRenderer({ links, title }: LinksRendererProps) {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <h3 className="font-semibold text-sm text-base-content">
-                      {link.title}
+                      {label}
                     </h3>
                     <span className={`badge badge-sm ${cfg.badgeClass}`}>
                       {t(cfg.badgeKey)}
                     </span>
                   </div>
-                  {link.description && (
+                  {description && (
                     <p className="text-xs text-base-content/60 mt-0.5 truncate">
-                      {link.description}
+                      {description}
                     </p>
                   )}
                 </div>
@@ -74,7 +78,7 @@ export default function LinksRenderer({ links, title }: LinksRendererProps) {
                   rel="noopener noreferrer"
                   className="btn btn-primary btn-sm btn-outline shrink-0 gap-1"
                   id={`link-btn-${idx}`}
-                  aria-label={`${t("links.visit")}: ${link.title}. ${t("links.opensInNewTab")}`}
+                  aria-label={`${t("links.visit")}: ${label}. ${t("links.opensInNewTab")}`}
                 >
                   {t("links.visit")}
                   <span aria-hidden="true" className="rtl:-scale-x-100">

@@ -115,6 +115,13 @@
   "error.locationUnavailable": "మీ స్థానాన్ని గుర్తించలేకపోయాం. దయచేసి మీ చిరునామాను నమోదు చేయండి.",
   "error.geoUnsupported": "మీ బ్రౌజర్ స్థాన గుర్తింపును సమర్థించదు. దయచేసి మీ చిరునామాను నమోదు చేయండి.",
   "error.geoReverse": "మీ స్థానం నుండి చిరునామాను రూపొందించలేకపోయాం. దయచేసి దానిని మీరే నమోదు చేయండి.",
+  "steps.title": "దశలవారీ మార్గదర్శిని",
+  "links.item.registration.title": "ఓటరు నమోదు",
+  "links.item.registration.description": "ఓటరుగా నమోదు చేసుకోండి లేదా మీ స్థితిని తనిఖీ చేయండి",
+  "links.item.absentee.title": "పోస్టల్ బ్యాలెట్",
+  "links.item.absentee.description": "పోలింగ్ కేంద్రానికి వెళ్లకుండా ఓటు వేసే విధానం తెలుసుకోండి",
+  "links.item.ballot.title": "నమూనా బ్యాలెట్",
+  "links.item.ballot.description": "మీకు కనిపించే బ్యాలెట్‌ను ముందుగా చూడండి",
 
   "common.close": "మూసివేయి",
   "common.back": "వెనుకకు",

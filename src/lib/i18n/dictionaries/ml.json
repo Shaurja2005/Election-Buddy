@@ -115,6 +115,13 @@
   "error.locationUnavailable": "നിങ്ങളുടെ സ്ഥാനം കണ്ടെത്താനായില്ല. ദയവായി വിലാസം നൽകുക.",
   "error.geoUnsupported": "നിങ്ങളുടെ ബ്രൗസർ സ്ഥാനം കണ്ടെത്തൽ പിന്തുണയ്ക്കുന്നില്ല. ദയവായി വിലാസം നൽകുക.",
   "error.geoReverse": "നിങ്ങളുടെ സ്ഥാനത്തിൽ നിന്ന് വിലാസം ഉണ്ടാക്കാനായില്ല. ദയവായി സ്വയം നൽകുക.",
+  "steps.title": "ഘട്ടം ഘട്ടമായ വഴികാട്ടി",
+  "links.item.registration.title": "വോട്ടർ രജിസ്ട്രേഷൻ",
+  "links.item.registration.description": "വോട്ടറായി രജിസ്റ്റർ ചെയ്യുക അല്ലെങ്കിൽ നിങ്ങളുടെ സ്ഥിതി പരിശോധിക്കുക",
+  "links.item.absentee.title": "തപാൽ ബാലറ്റ്",
+  "links.item.absentee.description": "ബൂത്തിൽ പോകാതെ വോട്ട് ചെയ്യുന്ന വിധം അറിയുക",
+  "links.item.ballot.title": "മാതൃകാ ബാലറ്റ്",
+  "links.item.ballot.description": "നിങ്ങൾ കാണാൻ പോകുന്ന ബാലറ്റ് മുൻകൂട്ടി കാണുക",
 
   "common.close": "അടയ്ക്കുക",
   "common.back": "പിന്നോട്ട്",
