@@ -4,23 +4,15 @@ import { useState, useRef, useEffect } from "react";
 import type { ChatMessage, ChatApiRequest, ChatApiResponse, ChatSession } from "@/types";
 import ChatBubble, { TypingBubble } from "./ChatBubble";
 import { useAuth } from "@/contexts/AuthContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 
-const QUICK_QUESTIONS = [
-  "How do I register to vote?",
-  "When is the next election?",
-  "Where is my polling place?",
-  "How do I request an absentee ballot?",
-  "What ID do I need to vote?",
-];
-
-const WELCOME_MESSAGE: ChatMessage = {
-  id: "welcome",
-  role: "assistant",
-  content:
-    "Hello! I'm **Ballot Buddy** 🗳️ — your non-partisan election assistant.\n\nI can help you with:\n- Voter registration steps\n- Polling locations near you\n- Absentee & mail-in ballots\n- Election dates and deadlines\n- Privileges for senior citizens and PwDs\n\nEnter your address above for personalized info, or pick a quick question below!",
-  timestamp: new Date(),
-  responseType: "text",
-};
+const QUICK_QUESTION_KEYS = [
+  "chat.suggested.register",
+  "chat.suggested.checkName",
+  "chat.suggested.findBooth",
+  "chat.suggested.documents",
+  "chat.suggested.evm",
+] as const;
 
 interface ChatInterfaceProps {
   address: string;
@@ -36,13 +28,20 @@ export default function ChatInterface({ address, messages, onAddMessage }: ChatI
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { uploadFile } = useAuth();
+  const { t, locale } = useLanguage();
 
   // Auto-inject welcome message if empty
   useEffect(() => {
     if (messages.length === 0 || !messages.some(m => m.id === "welcome")) {
-      onAddMessage(WELCOME_MESSAGE);
+      onAddMessage({
+        id: "welcome",
+        role: "assistant",
+        content: t("chat.welcome"),
+        timestamp: new Date(),
+        responseType: "text",
+      });
     }
-  }, [messages.length, onAddMessage, messages]);
+  }, [messages.length, onAddMessage, messages, t]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -67,7 +66,7 @@ export default function ChatInterface({ address, messages, onAddMessage }: ChatI
         .filter((m) => m.id !== "welcome")
         .map((m) => ({ role: m.role, content: m.content }));
 
-      const reqBody: ChatApiRequest = { message: text.trim(), address, history };
+      const reqBody: ChatApiRequest = { message: text.trim(), address, history, locale };
 
       const res = await fetch("/api/chat", {
         method: "POST",
@@ -80,7 +79,7 @@ export default function ChatInterface({ address, messages, onAddMessage }: ChatI
       const assistantMessage: ChatMessage = {
         id: crypto.randomUUID(),
         role: "assistant",
-        content: data.reply || data.error || "Sorry, I couldn't get a response.",
+        content: data.reply || data.error || t("chat.noResponse"),
         timestamp: new Date(),
         responseType: data.responseType ?? "text",
         structuredData: data.structuredData,
@@ -92,8 +91,7 @@ export default function ChatInterface({ address, messages, onAddMessage }: ChatI
       const errorMessage: ChatMessage = {
         id: crypto.randomUUID(),
         role: "assistant",
-        content:
-          "I'm sorry, something went wrong connecting to the server. Please check your connection and try again.",
+        content: t("error.network"),
         timestamp: new Date(),
         responseType: "text",
       };
@@ -110,7 +108,7 @@ export default function ChatInterface({ address, messages, onAddMessage }: ChatI
     setIsUploading(true);
     const url = await uploadFile(file);
     if (url) {
-      setInput((prev) => prev + (prev ? "\n" : "") + `[Attached File: ${file.name}](${url})`);
+      setInput((prev) => prev + (prev ? "\n" : "") + `[${t("chat.attachedFile")}: ${file.name}](${url})`);
     }
     setIsUploading(false);
     if (fileInputRef.current) fileInputRef.current.value = "";
@@ -137,7 +135,7 @@ export default function ChatInterface({ address, messages, onAddMessage }: ChatI
       <div
         role="log"
         aria-live="polite"
-        aria-label="Chat messages"
+        aria-label={t("chat.messagesLabel")}
         aria-relevant="additions"
         className="flex-1 overflow-y-auto px-4 py-4 space-y-4"
         style={{ minHeight: 0 }}
@@ -150,25 +148,28 @@ export default function ChatInterface({ address, messages, onAddMessage }: ChatI
       </div>
 
       {/* ── Quick Questions ── */}
-      <nav aria-label="Quick election questions" className="px-4 py-2 border-t border-base-200">
-        <div className="flex gap-2 flex-wrap" role="group" aria-label="Common questions">
-          {QUICK_QUESTIONS.map((q) => (
-            <button
-              key={q}
-              onClick={() => sendMessage(q)}
-              disabled={isLoading}
-              aria-label={`Ask: ${q}`}
-              className="text-xs px-3 py-1.5 rounded-full border border-primary/40 text-primary hover:bg-primary hover:text-primary-content transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
-              id={`quick-${q.replace(/\s+/g, "-").toLowerCase().slice(0, 20)}`}
-            >
-              {q}
-            </button>
-          ))}
+      <nav aria-label={t("chat.quickLabel")} className="px-4 py-2 border-t border-base-200">
+        <div className="flex gap-2 flex-wrap" role="group" aria-label={t("chat.quickLabel")}>
+          {QUICK_QUESTION_KEYS.map((key) => {
+            const question = t(key);
+            return (
+              <button
+                key={key}
+                onClick={() => sendMessage(question)}
+                disabled={isLoading}
+                aria-label={t("chat.ask", { question })}
+                className="text-xs px-3 py-1.5 rounded-full border border-primary/40 text-primary hover:bg-primary hover:text-primary-content transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
+                id={`quick-${key.split(".").pop()}`}
+              >
+                {question}
+              </button>
+            );
+          })}
         </div>
       </nav>
 
       {/* ── Input area ── */}
-      <div className="px-4 py-3 border-t border-base-200 bg-base-100" role="form" aria-label="Chat input">
+      <div className="px-4 py-3 border-t border-base-200 bg-base-100" role="form" aria-label={t("chat.inputFormLabel")}>
         <div
           className="flex items-end gap-2 rounded-2xl border border-base-300 bg-base-200 px-4 py-2 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-all"
         >
@@ -183,7 +184,7 @@ export default function ChatInterface({ address, messages, onAddMessage }: ChatI
             type="button"
             onClick={() => fileInputRef.current?.click()}
             disabled={isLoading || isUploading}
-            aria-label="Upload document"
+            aria-label={t("chat.uploadDocument")}
             className="flex-shrink-0 w-9 h-9 flex items-center justify-center rounded-xl bg-base-300 hover:bg-base-300/80 text-base-content/70 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 mb-0.5"
           >
             {isUploading ? (
@@ -196,14 +197,14 @@ export default function ChatInterface({ address, messages, onAddMessage }: ChatI
           </button>
           
           <label htmlFor="chat-input" className="sr-only">
-            Type your election question
+            {t("chat.inputLabel")}
           </label>
           <textarea
             ref={inputRef}
             id="chat-input"
             rows={1}
             className="flex-1 resize-none bg-transparent text-base-content placeholder-base-content/40 text-sm focus:outline-none max-h-32 leading-relaxed py-1"
-            placeholder="Ask about elections, registration, polling places…"
+            placeholder={t("chat.placeholder")}
             value={input}
             onChange={handleInput}
             onKeyDown={handleKeyDown}
@@ -212,13 +213,13 @@ export default function ChatInterface({ address, messages, onAddMessage }: ChatI
             style={{ height: "36px" }}
           />
           <span id="chat-input-hint" className="sr-only">
-            Press Enter to send, Shift+Enter for a new line
+            {t("chat.inputHint")}
           </span>
           <button
             id="chat-send-btn"
             onClick={() => sendMessage(input)}
             disabled={isLoading || !input.trim()}
-            aria-label="Send message"
+            aria-label={t("chat.send")}
             className="flex-shrink-0 w-9 h-9 flex items-center justify-center rounded-xl bg-primary text-primary-content disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-90 transition-all duration-200 mb-0.5"
           >
             {isLoading ? (

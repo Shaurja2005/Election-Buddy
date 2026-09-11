@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Script from "next/script";
 import type { AddressInputProps, GooglePlaceAutocomplete } from "@/types";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 declare global {
   interface Window {
@@ -31,6 +32,7 @@ export default function AddressInput({
   const inputRef = useRef<HTMLInputElement>(null);
   const autocompleteRef = useRef<GooglePlaceAutocomplete | null>(null);
   const [mapsKey, setMapsKey] = useState<string | null>(null);
+  const { t } = useLanguage();
 
   // Fetch the API key at runtime so it works flawlessly in Cloud Run
   useEffect(() => {
@@ -67,7 +69,7 @@ export default function AddressInput({
 
   const handleGeolocate = () => {
     if (!navigator.geolocation) {
-      setGeoError("Geolocation is not supported by your browser.");
+      setGeoError(t("error.geoUnsupported"));
       return;
     }
     setLocating(true);
@@ -101,13 +103,17 @@ export default function AddressInput({
             onSubmit(addr);
           }
         } catch {
-          setGeoError("Could not reverse-geocode your location.");
+          setGeoError(t("error.geoReverse"));
         } finally {
           setLocating(false);
         }
       },
       (err) => {
-        setGeoError(`Location error: ${err.message}`);
+        setGeoError(
+          err.code === err.PERMISSION_DENIED
+            ? t("error.locationDenied")
+            : t("error.locationUnavailable")
+        );
         setLocating(false);
       },
       { timeout: 8000 }
@@ -135,26 +141,26 @@ export default function AddressInput({
       <div className="w-full max-w-2xl mx-auto flex flex-col items-center text-center gap-5 py-6">
         <div className="space-y-1.5 px-4">
           <h2 className="text-xl md:text-2xl font-extrabold tracking-tight text-base-content leading-snug max-w-xl mx-auto">
-            Enter your full address to precisely locate your polling station, representatives, and specific election details.
+            {t("address.heading")}
           </h2>
         </div>
 
         <form
           onSubmit={handleFormSubmit}
-          aria-label="Address search form"
+          aria-label={t("address.formLabel")}
           className="w-full relative flex items-center shadow-md hover:shadow-lg rounded-full bg-base-100 border border-base-200 focus-within:ring-2 focus-within:ring-primary/40 focus-within:border-primary transition-all p-1.5"
         >
           <div className="pl-4 pr-2 text-primary opacity-80 flex items-center justify-center" aria-hidden="true">
             🔎︎
           </div>
           <label htmlFor="address-input" className="sr-only">
-            Your full address
+            {t("address.label")}
           </label>
           <input
             ref={inputRef}
             id="address-input"
             type="text"
-            placeholder="e.g. 1600 Pennsylvania Ave NW, Washington, DC..."
+            placeholder={t("address.placeholder")}
             className="flex-1 bg-transparent border-none focus:outline-none focus:ring-0 text-sm py-3 px-1 text-base-content placeholder-base-content/40"
             value={address}
             onChange={(e) => onChange(e.target.value)}
@@ -170,11 +176,11 @@ export default function AddressInput({
               className="btn btn-ghost btn-circle btn-sm text-primary hover:bg-primary/10 border border-transparent dark:border-white/50"
               onClick={handleGeolocate}
               disabled={disabled || locating}
-              aria-label="Use my current location"
-              title="Use my current location"
+              aria-label={t("address.useLocation")}
+              title={t("address.useLocation")}
             >
               {locating ? (
-                <span className="loading loading-spinner loading-xs" aria-label="Detecting location" />
+                <span className="loading loading-spinner loading-xs" aria-label={t("address.detecting")} />
               ) : (
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true">
                   <circle cx="12" cy="12" r="3" />
@@ -189,7 +195,7 @@ export default function AddressInput({
               type="submit"
               className="btn btn-primary btn-circle btn-md shadow-sm ml-1"
               disabled={disabled || !address.trim() || locating}
-              aria-label="Search for election information at this address"
+              aria-label={t("address.submit")}
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="m9 18 6-6-6-6"/>
@@ -199,7 +205,7 @@ export default function AddressInput({
         </form>
 
         <span id="address-hint" className="sr-only">
-          Type your full street address to get personalized election information. Supported countries include USA, India, UK, Canada, and Australia.
+          {t("address.hint")}
         </span>
 
         {geoError && (
@@ -208,7 +214,7 @@ export default function AddressInput({
           </p>
         )}
         <p className="text-[11px] text-base-content/40 font-medium">
-          <span aria-hidden="true">🔒</span> Your address is securely used to look up local data and is never stored.
+          <span aria-hidden="true">🔒</span> {t("address.privacy")}
         </p>
       </div>
     </>

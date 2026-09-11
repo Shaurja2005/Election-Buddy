@@ -1,5 +1,6 @@
 // Shared TypeScript types for the Election Assistant
 import type { User } from "firebase/auth";
+import type { Locale } from "@/lib/i18n/locales";
 
 export type MessageRole = "user" | "assistant";
 
@@ -83,6 +84,8 @@ export interface ChatApiRequest {
   message: string;
   address: string;
   history: { role: MessageRole; content: string }[];
+  /** Locale the assistant must reply in. Defaults to English when absent. */
+  locale?: Locale;
 }
 
 export interface ChatApiResponse {

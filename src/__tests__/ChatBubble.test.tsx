@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { renderWithProviders as render, screen } from "@/test-utils";
 import ChatBubble, { TypingBubble } from "@/components/ChatBubble";
 import type { ChatMessage } from "@/types";
 

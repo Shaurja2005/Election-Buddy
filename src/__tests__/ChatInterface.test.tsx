@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { renderWithProviders as render, screen, fireEvent, waitFor } from "@/test-utils";
 import userEvent from "@testing-library/user-event";
 import ChatInterface from "@/components/ChatInterface";
 import type { ChatMessage } from "@/types";
@@ -30,7 +30,7 @@ describe("ChatInterface", () => {
       />
     );
 
-    expect(screen.getByPlaceholderText(/ask about elections/i)).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/registration, polling booths/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/send message/i)).toBeInTheDocument();
   });
 
@@ -44,7 +44,7 @@ describe("ChatInterface", () => {
     );
 
     expect(screen.getByText("How do I register to vote?")).toBeInTheDocument();
-    expect(screen.getByText("When is the next election?")).toBeInTheDocument();
+    expect(screen.getByText("How do I check my name on the voter list?")).toBeInTheDocument();
   });
 
   it("disables send button when input is empty", () => {
@@ -70,7 +70,7 @@ describe("ChatInterface", () => {
       />
     );
 
-    const textarea = screen.getByPlaceholderText(/ask about elections/i);
+    const textarea = screen.getByPlaceholderText(/registration, polling booths/i);
     await user.type(textarea, "How do I register?");
 
     const sendBtn = screen.getByLabelText(/send message/i);
@@ -95,7 +95,7 @@ describe("ChatInterface", () => {
       />
     );
 
-    const textarea = screen.getByPlaceholderText(/ask about elections/i);
+    const textarea = screen.getByPlaceholderText(/registration, polling booths/i);
     await user.type(textarea, "How do I register?");
     await user.click(screen.getByLabelText(/send message/i));
 
@@ -125,7 +125,7 @@ describe("ChatInterface", () => {
       />
     );
 
-    const textarea = screen.getByPlaceholderText(/ask about elections/i);
+    const textarea = screen.getByPlaceholderText(/registration, polling booths/i);
     await user.type(textarea, "Vote registration");
     await user.keyboard("{Enter}");
 
@@ -147,7 +147,7 @@ describe("ChatInterface", () => {
       />
     );
 
-    const textarea = screen.getByPlaceholderText(/ask about elections/i);
+    const textarea = screen.getByPlaceholderText(/registration, polling booths/i);
     await user.type(textarea, "Test question");
     await user.click(screen.getByLabelText(/send message/i));
 
@@ -156,7 +156,7 @@ describe("ChatInterface", () => {
       const errorMsg = calls.find(
         (m) =>
           m.role === "assistant" &&
-          m.content.toLowerCase().includes("something went wrong")
+          m.content.toLowerCase().includes("could not reach the server")
       );
       expect(errorMsg).toBeTruthy();
     });
@@ -177,12 +177,12 @@ describe("ChatInterface", () => {
       />
     );
 
-    await user.click(screen.getByText("Where is my polling place?"));
+    await user.click(screen.getByText("How do I find my polling booth?"));
 
     expect(mockOnAddMessage).toHaveBeenCalledWith(
       expect.objectContaining({
         role: "user",
-        content: "Where is my polling place?",
+        content: "How do I find my polling booth?",
       })
     );
   });

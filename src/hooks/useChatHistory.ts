@@ -63,6 +63,21 @@ export function useChatHistory() {
     }
   }, [lastUsedAddress, isLoaded]);
 
+  // Indic scripts build one visible character from several code points, so a
+  // code-unit slice can cut a syllable in half. Segment by grapheme instead.
+  const titleFrom = (content: string, max = 30) => {
+    const graphemes =
+      typeof Intl !== "undefined" && "Segmenter" in Intl
+        ? Array.from(
+            new Intl.Segmenter(undefined, { granularity: "grapheme" }).segment(content),
+            (s) => s.segment
+          )
+        : Array.from(content);
+    return graphemes.length > max
+      ? graphemes.slice(0, max).join("") + "…"
+      : graphemes.join("");
+  };
+
   const createSession = (address: string = lastUsedAddress) => {
     // Prevent creating a new chat if the active one is already empty
     const currentActive = sessions.find(s => s.id === activeSessionId);
@@ -73,7 +88,8 @@ export function useChatHistory() {
 
     const newSession: ChatSession = {
       id: crypto.randomUUID(),
-      title: "New Chat",
+      // Empty means "untitled" — the sidebar supplies a translated label.
+      title: "",
       address: address,
       messages: [],
       createdAt: Date.now(),
@@ -94,8 +110,8 @@ export function useChatHistory() {
           const updatedMessages = [...s.messages, message];
           const updated = { ...s, messages: updatedMessages, updatedAt: Date.now() };
 
-          if (s.title === "New Chat" && message.role === "user") {
-            updated.title = message.content.slice(0, 30) + (message.content.length > 30 ? "..." : "");
+          if (!s.title && message.role === "user") {
+            updated.title = titleFrom(message.content);
           }
           return updated;
         }
@@ -113,14 +129,10 @@ export function useChatHistory() {
         if (s.id === id) {
           const updated = { ...s, ...updates, updatedAt: Date.now() };
           // Auto-generate title from first user message if it's currently "New Chat"
-          if (
-            updates.messages &&
-            s.title === "New Chat" &&
-            updates.messages.length > 0
-          ) {
+          if (updates.messages && !s.title && updates.messages.length > 0) {
             const firstUserMsg = updates.messages.find(m => m.role === "user");
             if (firstUserMsg) {
-              updated.title = firstUserMsg.content.slice(0, 30) + (firstUserMsg.content.length > 30 ? "..." : "");
+              updated.title = titleFrom(firstUserMsg.content);
             }
           }
           if (updates.address) {

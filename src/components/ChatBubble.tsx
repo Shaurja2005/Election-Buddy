@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import StepsRenderer from "./StepsRenderer";
 import LinksRenderer from "./LinksRenderer";
 import PollingLocations from "./PollingLocations";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const ReactMarkdown = dynamic(() => import("react-markdown"), {
   loading: () => <span className="opacity-50">...</span>,
@@ -23,7 +24,7 @@ export function TypingBubble() {
         height={32}
         className="w-8 h-8 rounded-full object-cover flex-shrink-0 border border-transparent dark:border-white/80"
       />
-      <div className="px-4 py-2.5 rounded-2xl rounded-bl-sm bg-gray-700 text-gray-100 border border-gray-600 shadow-sm">
+      <div className="px-4 py-2.5 rounded-2xl rounded-es-sm bg-gray-700 text-gray-100 border border-gray-600 shadow-sm">
         <span className="loading loading-dots loading-sm text-gray-300" />
       </div>
     </div>
@@ -32,6 +33,12 @@ export function TypingBubble() {
 
 export default function ChatBubble({ message }: ChatBubbleProps) {
   const isUser = message.role === "user";
+  const { t, intlLocale } = useLanguage();
+
+  const time = new Date(message.timestamp).toLocaleTimeString(intlLocale, {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
   const renderAssistantContent = () => {
     const { responseType, structuredData, content } = message;
@@ -41,7 +48,7 @@ export default function ChatBubble({ message }: ChatBubbleProps) {
         <div className="space-y-3">
           <StepsRenderer text={content} />
           {structuredData?.links && structuredData.links.length > 0 && (
-            <LinksRenderer links={structuredData.links} title="📎 Helpful Links" />
+            <LinksRenderer links={structuredData.links} title={`📎 ${t("links.helpful")}`} />
           )}
         </div>
       );
@@ -70,7 +77,7 @@ export default function ChatBubble({ message }: ChatBubbleProps) {
             <PollingLocations locations={structuredData.pollingLocations} />
           )}
           {structuredData?.links && structuredData.links.length > 0 && (
-            <LinksRenderer links={structuredData.links} title="📎 More Resources" />
+            <LinksRenderer links={structuredData.links} title={`📎 ${t("links.more")}`} />
           )}
         </div>
       );
@@ -83,7 +90,7 @@ export default function ChatBubble({ message }: ChatBubbleProps) {
           <ReactMarkdown>{content}</ReactMarkdown>
         </div>
         {structuredData?.links && structuredData.links.length > 0 && (
-          <LinksRenderer links={structuredData.links} title="📎 Resources" />
+          <LinksRenderer links={structuredData.links} title={`📎 ${t("links.title")}`} />
         )}
       </div>
     );
@@ -93,15 +100,15 @@ export default function ChatBubble({ message }: ChatBubbleProps) {
     return (
       <div
         role="article"
-        aria-label="Your message"
+        aria-label={t("chat.yourMessage")}
         className="flex items-end justify-end gap-2.5 chat-bubble-animate"
       >
         <div className="flex flex-col items-end gap-1 max-w-[80%]">
-          <div className="px-4 py-2.5 rounded-2xl rounded-br-sm bg-primary text-primary-content text-sm leading-relaxed">
+          <div className="px-4 py-2.5 rounded-2xl rounded-ee-sm bg-primary text-primary-content text-sm leading-relaxed">
             {message.content}
           </div>
-          <span className="text-[11px] text-base-content/40 pr-1" suppressHydrationWarning>
-            {new Date(message.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+          <span className="text-[11px] text-base-content/40 pe-1" suppressHydrationWarning>
+            {time}
           </span>
         </div>
         {/* User avatar */}
@@ -115,7 +122,7 @@ export default function ChatBubble({ message }: ChatBubbleProps) {
   return (
     <div
       role="article"
-      aria-label="Ballot Buddy response"
+      aria-label={t("chat.assistantResponse")}
       className="flex items-end gap-2.5 chat-bubble-animate"
     >
       {/* Bot avatar */}
@@ -128,11 +135,11 @@ export default function ChatBubble({ message }: ChatBubbleProps) {
         className="w-8 h-8 rounded-full object-cover flex-shrink-0 border border-transparent dark:border-white/80"
       />
       <div className="flex flex-col gap-1 max-w-[80%]">
-        <div className="px-4 py-2.5 rounded-2xl rounded-bl-sm bg-gray-700 text-gray-100 border border-gray-600 shadow-sm text-sm leading-relaxed">
+        <div className="px-4 py-2.5 rounded-2xl rounded-es-sm bg-gray-700 text-gray-100 border border-gray-600 shadow-sm text-sm leading-relaxed">
           {renderAssistantContent()}
         </div>
-        <span className="text-[11px] text-base-content/40 pl-1" suppressHydrationWarning>
-          {new Date(message.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+        <span className="text-[11px] text-base-content/40 ps-1" suppressHydrationWarning>
+          {time}
         </span>
       </div>
     </div>

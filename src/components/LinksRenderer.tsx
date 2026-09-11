@@ -1,48 +1,47 @@
 "use client";
 
 import type { ElectionLink, LinksRendererProps } from "@/types";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const TYPE_CONFIG: Record<
   ElectionLink["type"],
-  { icon: string; badge: string; badgeClass: string }
+  { icon: string; badgeKey: string; badgeClass: string }
 > = {
   registration: {
     icon: "✅",
-    badge: "Register",
+    badgeKey: "links.type.registration",
     badgeClass: "badge-success",
   },
   polling: {
     icon: "🗳️",
-    badge: "Polling",
+    badgeKey: "links.type.polling",
     badgeClass: "badge-primary",
   },
   official: {
     icon: "🏛️",
-    badge: "Official",
+    badgeKey: "links.type.official",
     badgeClass: "badge-info",
   },
   ballot: {
     icon: "📋",
-    badge: "Ballot",
+    badgeKey: "links.type.ballot",
     badgeClass: "badge-warning",
   },
   general: {
     icon: "🔗",
-    badge: "Info",
+    badgeKey: "links.type.info",
     badgeClass: "badge-ghost",
   },
 };
 
-export default function LinksRenderer({
-  links,
-  title = "🔗 Official Resources",
-}: LinksRendererProps) {
+export default function LinksRenderer({ links, title }: LinksRendererProps) {
+  const { t } = useLanguage();
   if (!links || links.length === 0) return null;
 
   return (
     <div className="w-full">
       <p className="text-sm opacity-80 mb-3 font-medium uppercase tracking-wide">
-        {title}
+        {title ?? `🔗 ${t("links.title")}`}
       </p>
       <div className="grid grid-cols-1 gap-3">
         {links.map((link, idx) => {
@@ -60,7 +59,7 @@ export default function LinksRenderer({
                       {link.title}
                     </h3>
                     <span className={`badge badge-sm ${cfg.badgeClass}`}>
-                      {cfg.badge}
+                      {t(cfg.badgeKey)}
                     </span>
                   </div>
                   {link.description && (
@@ -73,10 +72,14 @@ export default function LinksRenderer({
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="btn btn-primary btn-sm btn-outline shrink-0"
+                  className="btn btn-primary btn-sm btn-outline shrink-0 gap-1"
                   id={`link-btn-${idx}`}
+                  aria-label={`${t("links.visit")}: ${link.title}. ${t("links.opensInNewTab")}`}
                 >
-                  Visit →
+                  {t("links.visit")}
+                  <span aria-hidden="true" className="rtl:-scale-x-100">
+                    →
+                  </span>
                 </a>
               </div>
             </div>

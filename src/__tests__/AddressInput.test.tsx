@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { renderWithProviders as render, screen, fireEvent, waitFor } from "@/test-utils";
 import userEvent from "@testing-library/user-event";
 import AddressInput from "@/components/AddressInput";
 
@@ -85,7 +85,7 @@ describe("AddressInput", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText(/geolocation is not supported/i)
+        screen.getByText(/does not support location detection/i)
       ).toBeInTheDocument();
     });
 

@@ -1,6 +1,7 @@
 "use client";
 
 import type { ChatSession, SidebarProps } from "@/types";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Sidebar({
   sessions,
@@ -11,6 +12,7 @@ export default function Sidebar({
   isOpen,
   onClose,
 }: SidebarProps) {
+  const { t } = useLanguage();
   return (
     <>
       {/* Mobile overlay */}
@@ -30,8 +32,8 @@ export default function Sidebar({
 
       {/* Actual sliding sidebar container */}
       <div
-        className={`fixed md:absolute inset-y-0 left-0 z-40 bg-base-100 border-r border-base-200 transition-transform duration-300 ease-in-out shadow-xl md:shadow-none h-full w-72 flex flex-col ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
+        className={`fixed md:absolute inset-y-0 start-0 z-40 bg-base-100 border-e border-base-200 transition-transform duration-300 ease-in-out shadow-xl md:shadow-none h-full w-72 flex flex-col ${
+          isOpen ? "translate-x-0" : "-translate-x-full rtl:translate-x-full"
         }`}
       >
         <div className="p-4 flex items-center gap-2 border-b border-base-200">
@@ -55,12 +57,12 @@ export default function Sidebar({
               <line x1="12" y1="5" x2="12" y2="19" />
               <line x1="5" y1="12" x2="19" y2="12" />
             </svg>
-            New Chat
+            {t("sidebar.newChat")}
           </button>
-          <button 
+          <button
             onClick={onClose}
             className="md:hidden btn btn-ghost btn-square btn-sm rounded-lg"
-            aria-label="Close sidebar"
+            aria-label={t("sidebar.close")}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
               <line x1="18" y1="6" x2="6" y2="18" />
@@ -72,7 +74,7 @@ export default function Sidebar({
         <div className="flex-1 overflow-y-auto p-3 space-y-1">
           {sessions.length === 0 ? (
             <div className="text-center text-sm text-base-content/50 mt-10">
-              No previous chats
+              {t("sidebar.noPreviousChats")}
             </div>
           ) : (
             sessions.map((session) => {
@@ -106,7 +108,7 @@ export default function Sidebar({
                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                   </svg>
                   <span className="truncate text-sm">
-                    {session.title || "New Chat"}
+                    {session.title || t("sidebar.newChat")}
                   </span>
                 </div>
                 <button
@@ -121,7 +123,7 @@ export default function Sidebar({
                       ? "opacity-0 group-hover:opacity-100 hover:text-error"
                       : "opacity-30 cursor-not-allowed"
                   }`}
-                  aria-label={canDelete ? "Delete chat" : "Delete disabled for new chat"}
+                  aria-label={canDelete ? t("sidebar.deleteChat") : t("sidebar.deleteDisabled")}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

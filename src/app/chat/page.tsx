@@ -6,9 +6,11 @@ import ChatInterface from "@/components/ChatInterface";
 import Sidebar from "@/components/Sidebar";
 import Image from "next/image";
 import { useChatHistory } from "@/hooks/useChatHistory";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { ChatSession } from "@/types";
 
 export default function ChatApp() {
+  const { t } = useLanguage();
   const {
     sessions,
     activeSession,
@@ -81,9 +83,9 @@ export default function ChatApp() {
         <div className="flex items-center px-4 py-3 bg-base-100 z-10 w-full mb-1">
           <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="btn btn-ghost btn-sm btn-square -ml-2 mr-2 hover:bg-base-200 transition-all"
-            aria-label="Toggle sidebar"
-            title="Toggle sidebar"
+            className="btn btn-ghost btn-sm btn-square -ms-2 me-2 hover:bg-base-200 transition-all"
+            aria-label={t("nav.toggleSidebar")}
+            title={t("nav.toggleSidebar")}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -110,12 +112,12 @@ export default function ChatApp() {
           ) : (
             <div className="flex items-center justify-center shrink-0 py-2">
               <div className="flex items-center gap-2 text-sm text-base-content dark:text-white/90 font-medium">
-                <span>Using data for: <strong className="font-bold text-primary">{activeSession.address.length > 35 ? activeSession.address.slice(0, 35) + "..." : activeSession.address}</strong></span>
+                <span>{t("chat.usingDataFor")} <strong className="font-bold text-primary">{activeSession.address.length > 35 ? activeSession.address.slice(0, 35) + "..." : activeSession.address}</strong></span>
                 <button
                   onClick={() => updateSession(activeSession.id, { address: "" })}
-                  className="ml-2 text-[11px] opacity-60 hover:opacity-100 hover:text-primary transition-colors uppercase tracking-wider font-bold"
+                  className="ms-2 text-[11px] opacity-60 hover:opacity-100 hover:text-primary transition-colors uppercase tracking-wider font-bold"
                 >
-                  Change
+                  {t("chat.changeAddress")}
                 </button>
               </div>
             </div>
@@ -128,16 +130,16 @@ export default function ChatApp() {
               <div className="flex items-center gap-3">
                 <Image
                   src="/logo.png"
-                  alt="Ballot Buddy Avatar"
+                  alt={t("chat.avatarAlt")}
                   width={40}
                   height={40}
                   className="w-10 h-10 rounded-full object-cover shadow-inner border-2 border-black"
                 />
                 <div className="flex flex-col">
-                  <span className="text-base font-bold leading-tight">Ballot Buddy</span>
+                  <span className="text-base font-bold leading-tight">{t("chat.title")}</span>
                   <div className="flex items-center gap-1.5 mt-0.5">
                     <div className="w-2.5 h-2.5 rounded-full bg-green-400 border border-green-200 shadow-sm" />
-                    <span className="text-xs font-medium opacity-90">Online Now</span>
+                    <span className="text-xs font-medium opacity-90">{t("chat.status.online")}</span>
                   </div>
                 </div>
               </div>
