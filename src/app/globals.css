@@ -26,6 +26,19 @@
   --input: oklch(95% 0 0);
   --ring: oklch(79% 0.209 151.711);
   --radius: 1.4rem;
+
+  /* ── Neumorphic tokens ──
+     One light source for the whole app, fixed at top-left. The direction lives
+     in the tokens so no component can quietly light itself from elsewhere; a
+     single element lit the other way reads as a rendering bug. Shadow offsets
+     stay physical under RTL — light does not mirror. */
+  --nm-surface: oklch(0.9550 0 0);
+  --nm-surface-sunken: oklch(0.9250 0 0);
+  --nm-light: rgba(255, 255, 255, 0.9);
+  --nm-dark: rgba(155, 165, 185, 0.45);
+  --nm-edge: rgba(0, 0, 0, 0.05);
+  --nm-distance: 6px;
+  --nm-blur: 14px;
 }
 
 .dark {
@@ -48,6 +61,14 @@
   --border: oklch(0.2520 0 0);
   --input: oklch(0.2520 0 0);
   --ring: oklch(0.8893 0.1777 95.2779);
+
+  /* Dark neumorphism needs a mid-tone base: pure black cannot show a highlight,
+     and a highlight under ~8% disappears entirely on most screens. */
+  --nm-surface: oklch(0.2350 0 0);
+  --nm-surface-sunken: oklch(0.1900 0 0);
+  --nm-light: rgba(255, 255, 255, 0.085);
+  --nm-dark: rgba(0, 0, 0, 0.72);
+  --nm-edge: rgba(255, 255, 255, 0.08);
 }
 
 /* ── Base ── */
@@ -89,6 +110,40 @@ body {
   background-color: var(--background);
   color: var(--foreground);
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ── Browser surfaces ──
+   Selection, caret and focus ring ship with browser defaults that belong to no
+   design system. Theme them from the palette. */
+::selection {
+  background-color: color-mix(in oklch, var(--primary) 35%, transparent);
+  color: var(--foreground);
+}
+
+:where(input, textarea) {
+  caret-color: var(--primary);
+}
+
+:where(a, button, [role="button"], input, textarea, select, [tabindex]):focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: 0.5rem;
+}
+
+/* Toggle knob travel. Tailwind writes both translate utilities into the same
+   custom property, so the RTL variant cannot reliably win; set it explicitly. */
+.nm-knob-on {
+  transform: translateX(1.25rem);
+}
+
+[dir="rtl"] .nm-knob-on {
+  transform: translateX(-1.25rem);
+}
+
+/* Figures line up in tables and stat readouts. */
+.tabular {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
 }
 
 /* ── Theme-aware scrollbar ── */

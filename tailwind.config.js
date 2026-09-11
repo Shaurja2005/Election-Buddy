@@ -21,14 +21,39 @@ module.exports = {
         secondary: { DEFAULT: "var(--secondary)", foreground: "var(--secondary-foreground)" },
         muted: { DEFAULT: "var(--muted)", foreground: "var(--muted-foreground)" },
         accent: { DEFAULT: "var(--accent)", foreground: "var(--accent-foreground)" },
+        destructive: {
+          DEFAULT: "var(--destructive)",
+          foreground: "var(--destructive-foreground)",
+        },
         border: "var(--border)",
         input: "var(--input)",
         ring: "var(--ring)",
+        nm: {
+          DEFAULT: "var(--nm-surface)",
+          surface: "var(--nm-surface)",
+          sunken: "var(--nm-surface-sunken)",
+          edge: "var(--nm-edge)",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      boxShadow: {
+        // Light from top-left: highlight offsets negative, shadow offsets positive.
+        "nm-raised":
+          "-6px -6px 14px var(--nm-light), 6px 6px 14px var(--nm-dark)",
+        "nm-raised-sm":
+          "-3px -3px 7px var(--nm-light), 3px 3px 7px var(--nm-dark)",
+        "nm-raised-lg":
+          "-10px -10px 24px var(--nm-light), 10px 10px 24px var(--nm-dark)",
+        // Inset inverts: the well is dark where the light cannot reach it.
+        "nm-inset":
+          "inset 4px 4px 9px var(--nm-dark), inset -4px -4px 9px var(--nm-light)",
+        "nm-pressed":
+          "inset 3px 3px 6px var(--nm-dark), inset -2px -2px 5px var(--nm-light)",
+        "nm-flat": "0 0 0 1px var(--nm-edge)",
       },
     },
   },
