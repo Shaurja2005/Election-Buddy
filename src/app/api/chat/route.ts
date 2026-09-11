@@ -1,6 +1,8 @@
 import { GoogleGenerativeAI, SchemaType, type ResponseSchema } from "@google/generative-ai";
 import { NextRequest, NextResponse } from "next/server";
 import { DEFAULT_LOCALE, LOCALES, isLocale, type Locale } from "@/lib/i18n/locales";
+import { OFFICIAL_LINKS, VOTER_HELPLINE } from "@/lib/india/officialLinks";
+import { ELIGIBILITY_RULES, FORMS } from "@/lib/india/eligibility";
 import type {
   ChatApiRequest,
   ChatApiResponse,
@@ -174,9 +176,22 @@ function buildSystemPrompt(
     }
     lines.push("=== END OFFICIAL DATA ===", "");
   } else {
+    // No Civic data is the normal case for an Indian address, so give the
+    // model the committed ECI facts rather than an apology.
     lines.push(
-      "No live civic data was retrieved (either the address is outside the US, no active election in the system, or the Civic API key is not configured).",
-      "Use your training knowledge to answer the user's question accurately.",
+      "No live Civic API data applies to this address (the Civic API covers US addresses only).",
+      "Use the official Indian references below and your training knowledge.",
+      "",
+      "=== OFFICIAL INDIAN REFERENCES ===",
+      ...OFFICIAL_LINKS.map((l) => `${l.title.en}: ${l.url}`),
+      `National voter helpline: ${VOTER_HELPLINE}`,
+      "",
+      "Enrolment forms:",
+      ...FORMS.map((f) => `  Form ${f.number} — ${f.purpose.en}`),
+      "",
+      "Eligibility to enrol:",
+      ...ELIGIBILITY_RULES.map((r) => `  - ${r.rule.en}`),
+      "=== END REFERENCES ===",
       ""
     );
   }

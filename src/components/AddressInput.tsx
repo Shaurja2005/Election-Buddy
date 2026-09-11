@@ -57,6 +57,7 @@ export default function AddressInput({
     }
     const ac = new window.google.maps.places.Autocomplete(inputRef.current, {
       types: ["address"],
+      componentRestrictions: { country: "in" },
     });
     ac.addListener("place_changed", () => {
       const place = ac.getPlace();

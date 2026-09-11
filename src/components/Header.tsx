@@ -6,10 +6,12 @@ import { usePathname } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { OFFICIAL_LINKS } from "@/lib/india/officialLinks";
+import { pick } from "@/lib/india/types";
 
 export default function Header() {
   const { user, loading, signInWithGoogle, logout } = useAuth();
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const pathname = usePathname();
 
   // The dashboard has its own topbar; stacking both wastes the viewport.
@@ -109,12 +111,18 @@ export default function Header() {
               aria-label={t("header.portalsMenuLabel")}
               className="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 border border-base-200 rounded-2xl w-52 text-sm mt-1"
             >
-              <li role="none"><a role="menuitem" href="https://eci.gov.in" target="_blank" rel="noopener noreferrer">🇮🇳 India — eci.gov.in</a></li>
-              <li role="none"><a role="menuitem" href="https://vote.gov" target="_blank" rel="noopener noreferrer">🇺🇸 USA — vote.gov</a></li>
-              <li role="none"><a role="menuitem" href="https://www.gov.uk/vote-uk-election" target="_blank" rel="noopener noreferrer">🇬🇧 UK — gov.uk</a></li>
-              <li role="none"><a role="menuitem" href="https://www.elections.ca" target="_blank" rel="noopener noreferrer">🇨🇦 Canada — elections.ca</a></li>
-              <li role="none"><a role="menuitem" href="https://www.aec.gov.au" target="_blank" rel="noopener noreferrer">🇦🇺 Australia — aec.gov.au</a></li>
-              <li role="none"><a role="menuitem" href="https://www.elections.org.za" target="_blank" rel="noopener noreferrer">🇿🇦 South Africa — IEC</a></li>
+              {OFFICIAL_LINKS.map((link) => (
+                <li key={link.id} role="none">
+                  <a
+                    role="menuitem"
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {pick(link.title, locale)}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
         </nav>
