@@ -3,11 +3,11 @@
 import { createContext, useContext, useEffect, useState, useRef } from "react";
 import { 
   onAuthStateChanged, 
-  signInWithPopup, 
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
   signOut, 
   User,
-  Auth,
-  GoogleAuthProvider
+  Auth
 } from "firebase/auth";
 import { ref, uploadBytes, getDownloadURL, FirebaseStorage } from "firebase/storage";
 import { initFirebase } from "@/lib/firebase";
@@ -22,20 +22,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [authError, setAuthError] = useState<string | null>(null);
   const { t } = useLanguage();
   
-  // We store auth and provider in refs so they persist across renders
   const authRef = useRef<Auth | null>(null);
-  const providerRef = useRef<GoogleAuthProvider | null>(null);
   const storageRef = useRef<FirebaseStorage | null>(null);
 
   useEffect(() => {
-    // Dynamically fetch Firebase config at runtime to completely bypass Cloud Run's build-time limitation
     fetch('/api/config')
       .then(res => res.json())
       .then(data => {
         if (data.firebase && data.firebase.apiKey) {
-          const { auth, googleProvider, storage } = initFirebase(data.firebase);
+          const { auth, storage } = initFirebase(data.firebase);
           authRef.current = auth;
-          providerRef.current = googleProvider;
           storageRef.current = storage;
           
           if (auth) {
@@ -43,8 +39,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               setUser(u);
               setLoading(false);
             });
-            // Note: Returning from inside a promise .then() doesn't act as a useEffect cleanup
-            // but for a singleton auth state in a root provider it's generally okay.
           } else {
             setLoading(false);
           }
@@ -58,17 +52,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
   }, []);
 
-  const signInWithGoogle = async () => {
-    if (!authRef.current || !providerRef.current) {
+  const signInWithEmail = async (email: string, pass: string) => {
+    if (!authRef.current) {
       setAuthError(t("auth.notConfigured"));
       return;
     }
     try {
       setAuthError(null);
-      await signInWithPopup(authRef.current, providerRef.current);
-    } catch (error) {
-      console.error("Error signing in with Google", error);
-      setAuthError(t("auth.signInFailed"));
+      await signInWithEmailAndPassword(authRef.current, email, pass);
+    } catch (error: any) {
+      console.error("Error signing in", error);
+      setAuthError(error.message || t("auth.signInFailed"));
+      throw error;
+    }
+  };
+
+  const signUpWithEmail = async (email: string, pass: string) => {
+    if (!authRef.current) {
+      setAuthError(t("auth.notConfigured"));
+      return;
+    }
+    try {
+      setAuthError(null);
+      await createUserWithEmailAndPassword(authRef.current, email, pass);
+    } catch (error: any) {
+      console.error("Error signing up", error);
+      setAuthError(error.message || t("auth.signInFailed"));
+      throw error;
     }
   };
 
@@ -101,7 +111,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, signInWithGoogle, logout, uploadFile }}>
+    <AuthContext.Provider value={{ user, loading, signInWithEmail, signUpWithEmail, logout, uploadFile }}>
       {children}
       {authError && (
         <div

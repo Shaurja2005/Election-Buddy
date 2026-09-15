@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "348537307647",
+    "project_id": "vision-1caa0",
+    "storage_bucket": "vision-1caa0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:348537307647:android:3a3ce807392ce41a46a7ca",
+        "android_client_info": {
+          "package_name": "com.electionassistant.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "348537307647-ibiaj2vqovbblimq8ueedq8chskro32a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDuKPsddEYPSaJyWMs8ZWj_zeuey1_uKow"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "348537307647-ibiaj2vqovbblimq8ueedq8chskro32a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

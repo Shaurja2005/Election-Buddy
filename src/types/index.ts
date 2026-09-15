@@ -151,7 +151,8 @@ export interface SidebarProps {
 export interface AuthContextType {
   user: User | null;
   loading: boolean;
-  signInWithGoogle: () => Promise<void>;
+  signInWithEmail: (email: string, pass: string) => Promise<void>;
+  signUpWithEmail: (email: string, pass: string) => Promise<void>;
   logout: () => Promise<void>;
   uploadFile: (file: File) => Promise<string | null>;
 }

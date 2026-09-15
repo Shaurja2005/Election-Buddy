@@ -1,10 +1,10 @@
 import { initializeApp, getApps, getApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, Auth } from "firebase/auth";
+import { getAuth, Auth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 
 export function initFirebase(config: Record<string, string>) {
   if (!config.apiKey) {
-    return { auth: null, googleProvider: null, storage: null };
+    return { auth: null, storage: null };
   }
 
   let app;
@@ -16,7 +16,6 @@ export function initFirebase(config: Record<string, string>) {
 
   const auth = app ? getAuth(app) : null;
   const storage = app ? getStorage(app) : null;
-  const googleProvider = new GoogleAuthProvider();
 
-  return { auth, googleProvider, storage };
+  return { auth, storage };
 }
